@@ -1,0 +1,8 @@
+{
+    "mongodb": {
+        "connectionString": "mongodb+srv://rupali_kiran:rupalikiran@sitrain-z7tp6.mongodb.net/test?retryWrites=true&w=majority"
+    },
+    "jwt": {
+        "secret" : "Sitrain"
+    }  
+}
