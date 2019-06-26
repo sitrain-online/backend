@@ -23,6 +23,7 @@ var mongoose = require("./services/connection");
 var admin = require("./routes/admin");
 var login = require("./routes/login");
 var user = require("./routes/user");
+var universal = require("./routes/universal");
 
 
 
@@ -39,7 +40,10 @@ app.use(passport.session());
 //bind routes
 app.use("/api/v1/admin",passport.authenticate('user-token', { session : false }),admin);
 app.use("/api/v1/user",passport.authenticate('user-token', { session : false }),user);
+app.use('/api/v1/subject',passport.authenticate('user-token', { session : false }),universal);
 app.use('/api/v1/login',login)
+
+
 
 
 

@@ -2,6 +2,7 @@ var UserModel = require("../models/user");
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+//create admin
 var createadmin = ()=>{
     bcrypt.hash("admin", saltRounds).then(function(hash) {
         UserModel.create({
@@ -17,6 +18,7 @@ var createadmin = ()=>{
         })
     });
 }
+
 
 //check if admin
 var checkadmin = (user)=>{
