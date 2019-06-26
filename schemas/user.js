@@ -1,4 +1,5 @@
 var mongoose = require("../services/connection");
+var UserModel = require("../models/user");
 
 
 var userschema = new mongoose.Schema({
@@ -33,8 +34,16 @@ var userschema = new mongoose.Schema({
         required : true,
         default : 1,
         type : Boolean
+    },
+    createdBy:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'UserModel'
     }
-});
+},
+
+    { timestamps: {}}
+
+    );
 
 
 

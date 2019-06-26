@@ -51,7 +51,8 @@ let trainerRegister = (req,res,next)=>{
                                 name : name,
                                 password : hash,
                                 emailid : emailid,
-                                contact  : contact
+                                contact  : contact,
+                                createdBy : req.user._id
                             })
                             tempdata.save().then(()=>{
                                 res.json({
