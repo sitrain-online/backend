@@ -36,6 +36,7 @@ let userlogin = (req,res,next)=>{
                         success: true,
                         message: "login successful",
                         user: {
+                            name : user.name,
                             type: user.type,
                             _id : user._id,
                             emailid : user.emailid,
