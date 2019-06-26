@@ -11,6 +11,12 @@ var tool = require("./services/tool");
 
 var app = express();
 app.use(helmet());
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, access-control-allow-origin");
+    next();
+});
+
 app.use(expressValidator());
 //import other files
 var mongoose = require("./services/connection");
