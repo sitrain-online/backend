@@ -77,6 +77,32 @@ let createEditsubject = (req,res,next)=>{
     }
 }
 
+
+let deleteSubject = (req,res,next)=>{
+    if(req.user.type==='TRAINER'){
+        var _id =  req.body._id;
+        SubjectModel.findOneAndRemove({
+            _id : _id
+        }).then(()=>{
+            res.json({
+                success: true,
+                message :  "Question has been deleted"
+            })
+        }).catch((err)=>{
+            res.status(500).json({
+                success : false,
+                message : "Unable to delete question"
+            })
+        })
+    }
+    else{
+        res.status(401).json({
+            success : false,
+            message : "Permissions not granted!"
+        })
+    } 
+}
+
             
 
 let getAllSubjects = (req,res,next)=>{
@@ -117,5 +143,5 @@ let getSingleSubject = (req,res,next)=>{
     })        
 }
 
-    module.exports = { createEditsubject ,getAllSubjects, getSingleSubject }
+    module.exports = { createEditsubject ,getAllSubjects, getSingleSubject, deleteSubject}
     

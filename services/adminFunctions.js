@@ -100,6 +100,33 @@ let trainerRegister = (req,res,next)=>{
     }
 }
 
+let removeTrainer = (req,res,next)=>{
+    if(req.user.type==='ADMIN'){
+        var _id =  req.body._id;
+        UserModel.findOneAndRemove({
+            _id : _id
+        }).then(()=>{
+            res.json({
+                success: true,
+                message :  "Account has been removed"
+            })
+        }).catch((err)=>{
+            res.status(500).json({
+                success : false,
+                message : "Unable to remove account"
+            })
+        })
+    }
+    else{
+        res.status(401).json({
+            success : false,
+            message : "Permissions not granted!"
+        })
+    } 
+}
+
+
+
 
 
 
@@ -160,4 +187,4 @@ let getSingleTrainer = (req,res,next)=>{
 
 
 
-module.exports = { trainerRegister, getAllTrainers, getSingleTrainer }
+module.exports = { trainerRegister, getAllTrainers, getSingleTrainer, removeTrainer }

@@ -1,4 +1,6 @@
 let QuestionModel = require("../models/questions");
+let tool = require("./tool");
+
 
 let createEditquestion = (req,res,next)=>{
     var _id = req.body._id || null;
@@ -15,44 +17,16 @@ let createEditquestion = (req,res,next)=>{
     else {
         var body =  req.body.body;
         var options =  req.body.options;
-        var correctopt =  req.body.correctopt;
         var quesimg =  req.body.quesimg;
-        var subject =  req.body.subject;
         var difficulty =  req.body.difficulty;
-
-        if(_id!=null){
-            QuestionModel.findOneAndUpdate({
-                _id : _id
-            },
-            {
-                body : body,
-                options : options,
-                correctopt : correctopt,
-                quesimg : quesimg,
-                subject : subject,
-                difficulty : difficulty
-                
-            }).then(()=>{
-                res.json({
-                    success: true,
-                    message :  "Question has been updated"
-                })
-            }).catch((err)=>{
-                res.status(500).json({
-                    success : false,
-                    message : "Unable to change question details"
-            })
-        })
-
-    }
-        else{   
+        var subjectid = req.body.subjectid;
             QuestionModel.findOne({ body : body }).then((info)=>{
                 if(!info){
                     var tempdata = QuestionModel({
                         body: body,
                         options : options,
                         quesimg : quesimg,
-                        subject : subject,
+                        subject : subjectid,
                         difficulty :difficulty,
                         createdBy : req.user._id
                     })
@@ -77,7 +51,7 @@ let createEditquestion = (req,res,next)=>{
                 }   
 
             })
-        }
+        
     }
     
 }
@@ -93,34 +67,88 @@ let createEditquestion = (req,res,next)=>{
     }
 }
 
-let getAllQuestions = (req,res,next)=>{
+
+let deleteQuestion = (req,res,next)=>{
     if(req.user.type==='TRAINER'){
-        QuestionModel.find({subject: 'subject'})
-        .populate('createdBy', 'name')
-        .exec(function (err, question) {
-            if (err){
-                console.log(err)
-                res.status(500).json({
-                    success : false,
-                    message : "Unable to fetch data"
-                })
-            }
-            else{
-                res.json({
-                    success : true,
-                    message : `Success`,
-                    data : question
-                })
-            }
-        })        
+        var _id =  req.body._id;
+        QuestionModel.findOneAndRemove({
+            _id : _id
+        }).then(()=>{
+            res.json({
+                success: true,
+                message :  "Question has been deleted"
+            })
+        }).catch((err)=>{
+            res.status(500).json({
+                success : false,
+                message : "Unable to delete question"
+            })
+        })
     }
     else{
         res.status(401).json({
             success : false,
             message : "Permissions not granted!"
         })
-    }    
+    } 
 }
+
+
+let getAllQuestions = (req,res,next)=>{
+    if(req.user.type==='TRAINER'){
+        var subject = req.body.subject;
+        if(subject.length!==0){
+            QuestionModel.find({subject : subject})
+            .populate('createdBy', 'name')
+            .populate('subjectid', 'topic')
+            .exec(function (err, question) {
+                if (err){
+                    console.log(err)
+                    res.status(500).json({
+                        success : false,
+                        message : "Unable to fetch data"
+                    })
+                }
+                else{
+                    res.json({
+                        success : true,
+                        message : `Success`,
+                        data : question
+                    })
+                }
+            })        
+
+        }
+        else{
+            QuestionModel.find({})
+            .populate('createdBy', 'name')
+            .populate('subjectid', 'topic')
+            .exec(function (err, question) {
+                if (err){
+                    console.log(err)
+                    res.status(500).json({
+                        success : false,
+                        message : "Unable to fetch data"
+                    })
+                }
+                else{
+                    res.json({
+                        success : true,
+                        message : `Success`,
+                        data : question
+                    })
+                }
+            })        
+        }
+        }
+    else{
+        res.status(401).json({
+            success : false,
+            message : "Permissions not granted!"
+        })
+    } 
+}   
+ 
 
 
 
@@ -156,7 +184,7 @@ let getSingleQuestion = (req,res,next)=>{
     }    
 }
 
-module.exports = { createEditquestion, getAllQuestions, getSingleQuestion }
+module.exports = { createEditquestion, getAllQuestions, getSingleQuestion, deleteQuestion }
 
 
 

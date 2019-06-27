@@ -6,7 +6,7 @@ var universal = require('../services/universalsubjectFunctions');
 router.post('/create',universal.createEditsubject);
 router.get('/details/all',universal.getAllSubjects);
 router.get('/details/:_id',universal.getSingleSubject);
-
+router.get('/delete',universal.deleteSubject);
 
 
 module.exports=router;

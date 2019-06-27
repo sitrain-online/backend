@@ -25,17 +25,17 @@ var questionschema = new mongoose.Schema({
 
         }
     ],
+    
+    subject:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'SubjectModel'
+    },
    
     quesimg: { 
         required : false,
         data: Buffer,
         contentType: String
          
-    },
-    subject : {
-        required : true ,
-        type : String,
-    
     },
     difficulty:{
         required : true,

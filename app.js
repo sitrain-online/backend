@@ -47,6 +47,7 @@ app.use("/api/v1/admin",passport.authenticate('user-token', { session : false })
 app.use("/api/v1/user",passport.authenticate('user-token', { session : false }),user);
 app.use('/api/v1/subject',passport.authenticate('user-token', { session : false }),universal);
 app.use('/api/v1/questions',passport.authenticate('user-token', { session : false }),question);
+
 app.use('/api/v1/login',login);
 
 
