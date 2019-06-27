@@ -3,11 +3,11 @@ let userdetails = (req,res,next)=>{
         success : true,
         message : 'successfull',
         user: {
-            name : user.name,
-            type: user.type,
-            _id : user._id,
-            emailid : user.emailid,
-            contact : user.contact
+            name : req.user.name,
+            type: req.user.type,
+            _id : req.user._id,
+            emailid : req.user.emailid,
+            contact : req.user.contact
         }
     })
 }

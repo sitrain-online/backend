@@ -24,6 +24,7 @@ var admin = require("./routes/admin");
 var login = require("./routes/login");
 var user = require("./routes/user");
 var universal = require("./routes/universal");
+var question = require("./routes/questions");
 
 
 
@@ -45,7 +46,8 @@ app.use(passport.session());
 app.use("/api/v1/admin",passport.authenticate('user-token', { session : false }),admin);
 app.use("/api/v1/user",passport.authenticate('user-token', { session : false }),user);
 app.use('/api/v1/subject',passport.authenticate('user-token', { session : false }),universal);
-app.use('/api/v1/login',login)
+app.use('/api/v1/questions',passport.authenticate('user-token', { session : false }),question);
+app.use('/api/v1/login',login);
 
 
 

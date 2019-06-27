@@ -98,7 +98,7 @@ let getSingleSubject = (req,res,next)=>{
     let _id = req.params._id;
     console.log(_id);
     SubjectModel.findById(_id)
-    .populate('createdBy')
+    .populate('createdBy', 'name')
     .exec(function (err, subject) {
         if (err){
             console.log(err)
