@@ -138,7 +138,7 @@ let removeTrainer = (req,res,next)=>{
 
 let getAllTrainers = (req,res,next)=>{
     if(req.user.type==='ADMIN'){
-        UserModel.find({type: 'TRAINER', status : 1},{ password: 0, type: 0 }).then((info)=>{
+        UserModel.find({type: 'TRAINER', status : 1},{ password: 0, type: 0,createdBy : 0,status : 0 }).then((info)=>{
             res.json({
                 success : true,
                 message : `Success`,
