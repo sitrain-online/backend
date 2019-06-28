@@ -2,7 +2,7 @@ let QuestionModel = require("../models/questions");
 let tool = require("./tool");
 
 
-let createEditquestion = (req,res,next)=>{
+let createQuestion = (req,res,next)=>{
     var _id = req.body._id || null;
     if(req.user.type==='TRAINER'){
     req.check('body', `invalid question`).notEmpty();
@@ -71,8 +71,12 @@ let createEditquestion = (req,res,next)=>{
 let deleteQuestion = (req,res,next)=>{
     if(req.user.type==='TRAINER'){
         var _id =  req.body._id;
-        QuestionModel.findOneAndRemove({
+        QuestionModel.findOneAndUpdate({
             _id : _id
+        },
+        {
+            status : 0
+
         }).then(()=>{
             res.json({
                 success: true,
@@ -98,7 +102,7 @@ let getAllQuestions = (req,res,next)=>{
     if(req.user.type==='TRAINER'){
         var subject = req.body.subject;
         if(subject.length!==0){
-            QuestionModel.find({subject : subject})
+            QuestionModel.find({subject : subject,status : 1})
             .populate('createdBy', 'name')
             .populate('subjectid', 'topic')
             .exec(function (err, question) {
@@ -120,7 +124,7 @@ let getAllQuestions = (req,res,next)=>{
 
         }
         else{
-            QuestionModel.find({})
+            QuestionModel.find({status : 1})
             .populate('createdBy', 'name')
             .populate('subjectid', 'topic')
             .exec(function (err, question) {
@@ -157,7 +161,7 @@ let getSingleQuestion = (req,res,next)=>{
     if(req.user.type==='TRAINER'){
         let _id = req.params._id;
         console.log(_id);
-        QuestionModel.findById(_id)
+        QuestionModel.find({_id : _id , status : 1})
         .populate('createdBy', 'name')
         .exec(function (err, question) {
             if (err){
@@ -168,11 +172,19 @@ let getSingleQuestion = (req,res,next)=>{
                 })
             }
             else{
-                res.json({
-                    success : true,
-                    message : `Success`,
-                    data : question
-                })
+                if(question.length===0){
+                    res.json({
+                        success : false,
+                        message : `No such question exists`,
+                    })
+                }
+                else{
+                    res.json({
+                        success : true,
+                        message : `Success`,
+                        data : question
+                    })
+                }   
             }
         })        
     }
@@ -184,7 +196,7 @@ let getSingleQuestion = (req,res,next)=>{
     }    
 }
 
-module.exports = { createEditquestion, getAllQuestions, getSingleQuestion, deleteQuestion }
+module.exports = { createQuestion, getAllQuestions, getSingleQuestion, deleteQuestion }
 
 
 

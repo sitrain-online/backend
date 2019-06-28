@@ -38,7 +38,13 @@ var userschema = new mongoose.Schema({
     createdBy:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'UserModel'
+    },
+    status:{
+        type: Boolean,
+        default : 1,
+        required : true
     }
+
 },
 
     { timestamps: {}}

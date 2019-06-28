@@ -26,7 +26,8 @@ let trainerRegister = (req,res,next)=>{
             var contact = req.body.contact;
             if(_id!=null){
                 UserModel.findOneAndUpdate({
-                    _id : _id
+                    _id : _id,
+                    status : 1
                 },
                 { 
                     name : name,
@@ -44,7 +45,7 @@ let trainerRegister = (req,res,next)=>{
                 })
             }
             else{
-                UserModel.findOne({'emailid': emailid}).then((user)=>{
+                UserModel.findOne({'emailid': emailid,status:1}).then((user)=>{
                     if(!user){
                         tool.hashPassword(password).then((hash)=>{
                             var tempdata = new UserModel({
@@ -103,8 +104,12 @@ let trainerRegister = (req,res,next)=>{
 let removeTrainer = (req,res,next)=>{
     if(req.user.type==='ADMIN'){
         var _id =  req.body._id;
-        UserModel.findOneAndRemove({
+        UserModel.findOneAndUpdate({
             _id : _id
+        },
+        {
+            status : 0
+
         }).then(()=>{
             res.json({
                 success: true,
@@ -133,7 +138,7 @@ let removeTrainer = (req,res,next)=>{
 
 let getAllTrainers = (req,res,next)=>{
     if(req.user.type==='ADMIN'){
-        UserModel.find({type: 'TRAINER'},{ password: 0, type: 0 }).then((info)=>{
+        UserModel.find({type: 'TRAINER', status : 1},{ password: 0, type: 0 }).then((info)=>{
             res.json({
                 success : true,
                 message : `Success`,
@@ -160,12 +165,23 @@ let getSingleTrainer = (req,res,next)=>{
     if(req.user.type==='ADMIN'){
         let _id = req.params._id;
         console.log(_id);
-        UserModel.findById(_id,{password: 0, type: 0}).then((info)=>{
-            res.json({
-                success : true,
-                message : `Success`,
-                data : info
-            })
+        UserModel.find({_id : _id,status : 1},{password: 0, type: 0}).then((info)=>{
+            if(info.length === 0){
+                res.json({
+                    success : false,
+                    message : `This account doesn't exist!`,
+                
+                })
+            }
+            else{
+                res.json({
+                    success : true,
+                    message : `Success`,
+                    data : info
+                })
+
+            }
+           
         }).catch((err)=>{
             res.status(500).json({
                 success : false,

@@ -7,7 +7,7 @@ var admin = require("../services/adminFunctions");
 router.post('/trainer/create',admin.trainerRegister);
 router.get('/trainer/details/all',admin.getAllTrainers);
 router.get('/trainer/details/:_id',admin.getSingleTrainer);
-router.get('/remove',admin.removeTrainer);
+router.get('/trainer/remove',admin.removeTrainer);
 
 
 
