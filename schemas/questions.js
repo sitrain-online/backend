@@ -25,6 +25,12 @@ var questionschema = new mongoose.Schema({
 
         }
     ],
+    explanation : {
+        type : String,
+        required : true
+
+
+    },
     
     subject:{
         type: mongoose.Schema.Types.ObjectId,

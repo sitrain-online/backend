@@ -20,11 +20,13 @@ let createQuestion = (req,res,next)=>{
         var quesimg =  req.body.quesimg;
         var difficulty =  req.body.difficulty;
         var subjectid = req.body.subjectid;
+        var explanation = req.body.explanation;
             QuestionModel.findOne({ body : body }).then((info)=>{
                 if(!info){
                     var tempdata = QuestionModel({
                         body: body,
                         options : options,
+                        explanation : explanation,
                         quesimg : quesimg,
                         subject : subjectid,
                         difficulty :difficulty,
@@ -117,6 +119,7 @@ let getAllQuestions = (req,res,next)=>{
                     res.json({
                         success : true,
                         message : `Success`,
+                        quesimg : quesimg,
                         data : question
                     })
                 }

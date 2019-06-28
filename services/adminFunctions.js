@@ -165,7 +165,7 @@ let getSingleTrainer = (req,res,next)=>{
     if(req.user.type==='ADMIN'){
         let _id = req.params._id;
         console.log(_id);
-        UserModel.find({_id : _id,status : 1},{password: 0, type: 0}).then((info)=>{
+        UserModel.find({_id : _id,status : 1},{password: 0, type: 0, createdBy : 0,status : 0}).then((info)=>{
             if(info.length === 0){
                 res.json({
                     success : false,
