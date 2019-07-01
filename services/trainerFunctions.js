@@ -3,9 +3,9 @@ let tool = require("./tool");
 
 
 let createQuestion = (req,res,next)=>{
-    var _id = req.body._id || null;
     if(req.user.type==='TRAINER'){
     req.check('body', `invalid question`).notEmpty();
+    req.check('subject', 'enter subject').notEmpty();
     var errors = req.validationErrors()
     if(errors){
         res.json({
@@ -19,9 +19,10 @@ let createQuestion = (req,res,next)=>{
         var options =  req.body.options;
         var quesimg =  req.body.quesimg;
         var difficulty =  req.body.difficulty;
-        var subjectid = req.body.subjectid;
+        var subjectid = req.body.subject;
         var explanation = req.body.explanation;
-            QuestionModel.findOne({ body : body }).then((info)=>{
+            QuestionModel.findOne({ body : body },{status:0})
+            .then((info)=>{
                 if(!info){
                     var tempdata = QuestionModel({
                         body: body,
@@ -104,7 +105,7 @@ let getAllQuestions = (req,res,next)=>{
     if(req.user.type==='TRAINER'){
         var subject = req.body.subject;
         if(subject.length!==0){
-            QuestionModel.find({subject : subject,status : 1})
+            QuestionModel.find({subject : subject,status : 1},{status : 0})
             .populate('createdBy', 'name')
             .populate('subjectid', 'topic')
             .exec(function (err, question) {
@@ -126,7 +127,7 @@ let getAllQuestions = (req,res,next)=>{
 
         }
         else{
-            QuestionModel.find({status : 1})
+            QuestionModel.find({status : 1},{status : 0})
             .populate('createdBy', 'name')
             .populate('subjectid', 'topic')
             .exec(function (err, question) {
@@ -163,7 +164,7 @@ let getSingleQuestion = (req,res,next)=>{
     if(req.user.type==='TRAINER'){
         let _id = req.params._id;
         console.log(_id);
-        QuestionModel.find({_id : _id , status : 1})
+        QuestionModel.find({_id : _id , status : 1},{status : 0})
         .populate('createdBy', 'name')
         .exec(function (err, question) {
             if (err){

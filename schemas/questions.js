@@ -34,7 +34,8 @@ var questionschema = new mongoose.Schema({
     
     subject:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'SubjectModel'
+        ref: 'SubjectModel',
+        required : true
     },
    
     quesimg: { 

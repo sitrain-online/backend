@@ -19,18 +19,29 @@ var testschema = new mongoose.Schema({
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'QuestionModel',
                 required : false
+        
             }
         
     ],
 
     duration : {
-        type : String,
+        type : Number,
         required : true
     
         },
     organisation : {
         type : String,
         required : false
+    },
+    difficulty : {
+        type : Number,
+        default : 1,
+        required : true
+    },
+    testbegins : {
+        type : Boolean,
+        default : 0,
+        required : true
     }
 
 

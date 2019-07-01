@@ -84,24 +84,31 @@ let createEditsubject = (req,res,next)=>{
             
 
 let getAllSubjects = (req,res,next)=>{
-    SubjectModel.find({}).then((info)=>{
-        res.json({
-            success : true,
-            message : `Success`,
-            data : info
-        })
-    }).catch((err)=>{
-        res.status(500).json({
-            success : false,
-            message : "Unable to fetch data"
-        })
-    })
+    SubjectModel.find({createdAt: 0, updatedAt : 0})
+    .populate('createdBy', 'name')
+    .exec(function (err, subject) {
+        if (err){
+            console.log(err)
+            res.status(500).json({
+                success : false,
+                message : "Unable to fetch data"
+            })
+        }
+        else{
+            res.json({
+                success : true,
+                message : `Success`,
+                data : subject
+            })   
+        }
+    })        
+
 }
 
 let getSingleSubject = (req,res,next)=>{
     let id = req.params._id;
     console.log(id);
-    SubjectModel.find({_id: id})
+    SubjectModel.find({_id: id},{createdAt: 0, updatedAt : 0})
     .populate('createdBy', 'name')
     .exec(function (err, subject) {
         if (err){
