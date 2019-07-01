@@ -1,5 +1,4 @@
 let UserModel = require("../models/user");
-const { sanitizeBody } = require('express-validator');
 var passport = require("../services/passportconf");
 var jwt = require('jsonwebtoken');
 var config = require('config');

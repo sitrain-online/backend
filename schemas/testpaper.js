@@ -22,9 +22,16 @@ var testschema = new mongoose.Schema({
             }
         
     ],
+
+    duration : {
+        type : String,
+        required : true
     
-
-
+        },
+    organisation : {
+        type : String,
+        required : false
+    }
 
 
 },
