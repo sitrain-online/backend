@@ -5,9 +5,9 @@ var questions = require("../services/trainerFunctions");
 
 
 router.post('/create',questions.createQuestion);
-router.get('/details/all',questions.getAllQuestions);
+router.post('/details/all',questions.getAllQuestions);
 router.get('/details/:_id',questions.getSingleQuestion);
-router.get('/delete',questions.deleteQuestion);
+router.post('/delete',questions.deleteQuestion);
 
 
 

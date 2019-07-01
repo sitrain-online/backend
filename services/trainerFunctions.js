@@ -119,7 +119,6 @@ let getAllQuestions = (req,res,next)=>{
                     res.json({
                         success : true,
                         message : `Success`,
-                        quesimg : quesimg,
                         data : question
                     })
                 }
