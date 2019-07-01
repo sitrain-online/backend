@@ -4,7 +4,7 @@ let SubjectModel = require("../models/subject");
 
 let createEditsubject = (req,res,next)=>{
     var _id = req.body._id || null;
-    if(req.user.type==='TRAINER'){
+    if(req.user.type==='ADMIN'){
     req.check('topic', `invalid topic`).notEmpty();
     var errors = req.validationErrors()
     if(errors){
@@ -100,7 +100,7 @@ let getAllSubjects = (req,res,next)=>{
 
 let getSingleSubject = (req,res,next)=>{
     let id = req.params._id;
-    console.log(_id);
+    console.log(id);
     SubjectModel.find({_id: id})
     .populate('createdBy', 'name')
     .exec(function (err, subject) {
