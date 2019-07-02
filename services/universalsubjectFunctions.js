@@ -84,7 +84,7 @@ let createEditsubject = (req,res,next)=>{
             
 
 let getAllSubjects = (req,res,next)=>{
-    SubjectModel.find({createdAt: 0, updatedAt : 0})
+    SubjectModel.find({status : 1},{createdAt: 0, updatedAt : 0})
     .populate('createdBy', 'name')
     .exec(function (err, subject) {
         if (err){
@@ -108,7 +108,7 @@ let getAllSubjects = (req,res,next)=>{
 let getSingleSubject = (req,res,next)=>{
     let id = req.params._id;
     console.log(id);
-    SubjectModel.find({_id: id},{createdAt: 0, updatedAt : 0})
+    SubjectModel.find({_id: id},{createdAt: 0, updatedAt : 0,status : 0})
     .populate('createdBy', 'name')
     .exec(function (err, subject) {
         if (err){

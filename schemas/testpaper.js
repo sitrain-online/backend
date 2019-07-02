@@ -42,6 +42,11 @@ var testschema = new mongoose.Schema({
         type : Boolean,
         default : 0,
         required : true
+    },
+    status : {
+        required : true,
+        default : 1,
+        type : Boolean
     }
 
 
