@@ -108,6 +108,7 @@ let getAllQuestions = (req,res,next)=>{
             QuestionModel.find({subject : subject,status : 1},{status : 0})
             .populate('createdBy', 'name')
             .populate('subject', 'topic')
+            .populate('questions', 'options body')
             .exec(function (err, question) {
                 if (err){
                     console.log(err)
@@ -129,7 +130,8 @@ let getAllQuestions = (req,res,next)=>{
         else{
             QuestionModel.find({status : 1},{status : 0})
             .populate('createdBy', 'name')
-            .populate('subjectid', 'topic')
+            .populate('subject', 'topic')
+            .populate('questions', 'options body')
             .exec(function (err, question) {
                 if (err){
                     console.log(err)
@@ -166,6 +168,8 @@ let getSingleQuestion = (req,res,next)=>{
         console.log(_id);
         QuestionModel.find({_id : _id , status : 1},{status : 0})
         .populate('createdBy', 'name')
+        .populate('subject', 'topic')
+        .populate('questions', 'options body')
         .exec(function (err, question) {
             if (err){
                 console.log(err)

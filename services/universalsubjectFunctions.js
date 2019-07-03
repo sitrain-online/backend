@@ -86,6 +86,7 @@ let createEditsubject = (req,res,next)=>{
 let getAllSubjects = (req,res,next)=>{
     SubjectModel.find({status : 1},{createdAt: 0, updatedAt : 0})
     .populate('createdBy', 'name')
+    
     .exec(function (err, subject) {
         if (err){
             console.log(err)
