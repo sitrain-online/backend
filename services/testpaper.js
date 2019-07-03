@@ -98,6 +98,8 @@ let getSingletest = (req,res,next)=>{
     console.log(id);
     TestPaperModel.find({_id: id,status : 1},{createdAt: 0, updatedAt : 0,status : 0})
     .populate('createdBy', 'name')
+    .populate('questions' , 'body')
+    .populate('options' , 'optbody optimg')
     .exec(function (err, testpaper) {
         if (err){
             console.log(err)
@@ -121,7 +123,8 @@ let getAlltests = (req,res,next)=>{
         var title = req.body.title;
             TestPaperModel.find({status : 1},{status : 0})
             .populate('createdBy', 'name')
-            .populate('questions' , 'options body')
+            .populate('questions' , 'body')
+            .populate('options' , 'optbody optimg')
             .exec(function (err, testpaper) {
                 if (err){
                     console.log(err)

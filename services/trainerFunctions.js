@@ -1,72 +1,81 @@
 let QuestionModel = require("../models/questions");
+let options = require("../models/option");
 let tool = require("./tool");
 
 
 let createQuestion = (req,res,next)=>{
     if(req.user.type==='TRAINER'){
-    req.check('body', `invalid question`).notEmpty();
-    req.check('subject', 'enter subject').notEmpty();
-    var errors = req.validationErrors()
-    if(errors){
-        res.json({
-            success : false,
-            message : 'Invalid inputs',
-            errors : errors
-        })
-    }
-    else {
-        var body =  req.body.body;
-        var options =  req.body.options;
-        var quesimg =  req.body.quesimg;
-        var difficulty =  req.body.difficulty;
-        var subjectid = req.body.subject;
-        var explanation = req.body.explanation;
-            QuestionModel.findOne({ body : body },{status:0})
-            .then((info)=>{
-                if(!info){
-                    var tempdata = QuestionModel({
-                        body: body,
-                        options : options,
-                        explanation : explanation,
-                        quesimg : quesimg,
-                        subject : subjectid,
-                        difficulty :difficulty,
-                        createdBy : req.user._id
-                    })
-                    tempdata.save().then(()=>{
-                        res.json({
-                            success : true,
-                            message : `New question created successfully!`
-                        })
-                    }).catch((err)=>{
-                        console.log(err);
-                        res.status(500).json({
-                            success : false,
-                            message : "Unable to create new question!"
-                        })
-                    })
-                }
-                else{
-                    res.json({
-                        success : false,
-                        message : `This question already exists!`
-                    })
-                }   
-
+        req.check('body', `invalid question`).notEmpty();
+        req.check('subject', 'enter subject').notEmpty();
+        var errors = req.validationErrors()
+        if(errors){
+            res.json({
+                success : false,
+                message : 'Invalid inputs',
+                errors : errors
             })
+        }
+        else {
+            var body =  req.body.body;
+            var option =  req.body.options;
+            var quesimg =  req.body.quesimg;
+            var difficulty =  req.body.difficulty;
+            var subjectid = req.body.subject;
+            var explanation = req.body.explanation;
+                QuestionModel.findOne({ body : body },{status:0})
+                .then((info)=>{
+                    if(!info){
+                        options.insertMany(option,(err,op)=>{
+                            if(err){
+                                console.log(err);
+                                res.status(500).json({
+                                    success : false,
+                                    message : "Unable to create new question!"
+                                })
+                            }
+                            else{
+                                var tempdata = QuestionModel({
+                                    body: body,
+                                    explanation : explanation,
+                                    quesimg : quesimg,
+                                    subject : subjectid,
+                                    difficulty :difficulty,
+                                    options:op,
+                                    createdBy : req.user._id
+                                })
+                                tempdata.save().then(()=>{
+                                    res.json({
+                                        success : true,
+                                        message : `New question created successfully!`
+                                    })
+                                }).catch((err)=>{
+                                    console.log(err);
+                                    res.status(500).json({
+                                        success : false,
+                                        message : "Unable to create new question!"
+                                    })
+                                })
+                            }
+                        })
+                    }
+                    else{
+                        res.json({
+                            success : false,
+                            message : `This question already exists!`
+                        })
+                    }   
+
+                })
+            
+        }
         
     }
-    
-}
-  
-
 
     else{
         res.status(401).json({
             success : false,
             message : "Permissions not granted!"
         })
-
     }
 }
 
@@ -108,7 +117,7 @@ let getAllQuestions = (req,res,next)=>{
             QuestionModel.find({subject : subject,status : 1},{status : 0})
             .populate('createdBy', 'name')
             .populate('subject', 'topic')
-            .populate('questions', 'options body')
+            .populate('options')
             .exec(function (err, question) {
                 if (err){
                     console.log(err)
@@ -131,7 +140,7 @@ let getAllQuestions = (req,res,next)=>{
             QuestionModel.find({status : 1},{status : 0})
             .populate('createdBy', 'name')
             .populate('subject', 'topic')
-            .populate('questions', 'options body')
+            .populate('options')
             .exec(function (err, question) {
                 if (err){
                     console.log(err)
@@ -169,7 +178,7 @@ let getSingleQuestion = (req,res,next)=>{
         QuestionModel.find({_id : _id , status : 1},{status : 0})
         .populate('createdBy', 'name')
         .populate('subject', 'topic')
-        .populate('questions', 'options body')
+        .populate('options')
         .exec(function (err, question) {
             if (err){
                 console.log(err)

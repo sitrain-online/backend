@@ -3,46 +3,34 @@ var UserModel = require("../models/user");
 
 
 var questionschema = new mongoose.Schema({
-
      body : {
         required : true ,
         type : String
     },
-    options :[
-        {
-            optbody : {
-                type : String,
-                required : false
-            },
-            optimg: {
-                type : String,
-                required : false
-            },
-            isAnswer:{
-                type : Boolean
+    anscount : {
+        required : true,
+        type : Number,
+        default : 1
 
-            }
-
-        }
-    ],
+    },
+    options : [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Options',
+        required : true
+    }],
     explanation : {
         type : String,
         required : true
-
-
     },
-    
     subject:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'subject',
+        ref: 'SubjectModel',
         required : true
     },
-   
     quesimg: { 
         required : false,
         data: Buffer,
-        contentType: String
-         
+        contentType: String 
     },
     difficulty:{
         required : true,
