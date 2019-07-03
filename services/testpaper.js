@@ -121,14 +121,7 @@ let getAlltests = (req,res,next)=>{
         var title = req.body.title;
             TestPaperModel.find({status : 1},{status : 0})
             .populate('createdBy', 'name')
-            .populate({
-                path : 'questions',
-                populate : {
-                    path : 'options',
-                    select : 'optbody'
-
-                }
-            })
+            .populate('questions' , 'options body')
             .exec(function (err, testpaper) {
                 if (err){
                     console.log(err)
