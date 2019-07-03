@@ -107,7 +107,7 @@ let getAllQuestions = (req,res,next)=>{
         if(subject.length!==0){
             QuestionModel.find({subject : subject,status : 1},{status : 0})
             .populate('createdBy', 'name')
-            .populate('subjectid', 'topic')
+            .populate('subject', 'topic')
             .exec(function (err, question) {
                 if (err){
                     console.log(err)

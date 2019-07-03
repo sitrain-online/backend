@@ -8,12 +8,10 @@ var bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 var passport = require("./services/passportconf");
 var tool = require("./services/tool");
-var upload = require("express-fileupload");
 var app = express();
 
 
 app.use(helmet());
-app.use(upload());
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, access-control-allow-origin");
@@ -45,26 +43,6 @@ app.use((req,res,next)=>{
 app.use(passport.initialize());
 app.use(passport.session());
 
-//file-uploads
-app.post("/",function(req,res){
-    if(req.files){
-        var file = req.files.filename,
-        var filename = file.name;
-        file.mv ("./uploads" + filename,function(err){
-            if(err) {
-                console.log(err)
-                res.send("unable to upload file!")
-            }
-            else{
-                res.json({
-                    success : true,
-                    message : "File has been uploaded"
-                })
-            }
-        })
-    }
-
-})
 
 
 //bind routes

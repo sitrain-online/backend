@@ -119,32 +119,16 @@ let getSingletest = (req,res,next)=>{
 let getAlltests = (req,res,next)=>{
     if(req.user.type==='TRAINER'){
         var title = req.body.title;
-        if(title.length!==0){
-            TestPaperModel.find({title : title,status : 1},{status : 0})
-            .populate('createdBy', 'name')
-            .populate('questionid' , 'body')
-            .populate('questionid' , 'options')
-            .exec(function (err, testpaper) {
-                if (err){
-                    console.log(err)
-                    res.status(500).json({
-                        success : false,
-                        message : "Unable to fetch data"
-                    })
-                }
-                else{
-                    res.json({
-                        success : true,
-                        message : `Success`,
-                        data : testpaper
-                    })
-                }
-            })        
-
-        }
-        else{
             TestPaperModel.find({status : 1},{status : 0})
             .populate('createdBy', 'name')
+            .populate({
+                path : 'questions',
+                populate : {
+                    path : 'options',
+                    select : 'optbody'
+
+                }
+            })
             .exec(function (err, testpaper) {
                 if (err){
                     console.log(err)
@@ -161,7 +145,7 @@ let getAlltests = (req,res,next)=>{
                     })
                 }
             })        
-        }
+        
         }
     else{
         res.status(401).json({
