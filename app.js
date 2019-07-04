@@ -27,6 +27,7 @@ var user = require("./routes/user");
 var universal = require("./routes/universal");
 var question = require("./routes/questions");
 var testpaper = require("./routes/testpaper");
+var up = require("./routes/fileUpload");
 
 
 
@@ -39,6 +40,8 @@ app.use((req,res,next)=>{
     console.log(req.body);
     next();
 })
+
+
 //passport
 app.use(passport.initialize());
 app.use(passport.session());
@@ -51,6 +54,7 @@ app.use("/api/v1/user",passport.authenticate('user-token', { session : false }),
 app.use('/api/v1/subject',passport.authenticate('user-token', { session : false }),universal);
 app.use('/api/v1/questions',passport.authenticate('user-token', { session : false }),question);
 app.use('/api/v1/test',passport.authenticate('user-token', { session : false }),testpaper);
+app.use('/api/v1/upload',passport.authenticate('user-token', { session : false }),up);
 
 
 app.use('/api/v1/login',login);
