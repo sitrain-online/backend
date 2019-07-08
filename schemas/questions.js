@@ -7,6 +7,12 @@ var questionschema = new mongoose.Schema({
         required : true ,
         type : String
     },
+    weightage :{
+        required : true,
+        type : Number,
+        default : 1
+
+    },
     anscount : {
         required : true,
         type : Number,
@@ -35,7 +41,7 @@ var questionschema = new mongoose.Schema({
     difficulty:{
         required : true,
         default : 0,
-        type : String
+        type : Number
     },
     createdBy:{
         type: mongoose.Schema.Types.ObjectId,

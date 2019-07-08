@@ -5,8 +5,8 @@ let tool = require("./tool");
 
 let createQuestion = (req,res,next)=>{
     if(req.user.type==='TRAINER'){
-        req.check('body', `invalid question`).notEmpty();
-        req.check('subject', 'enter subject').notEmpty();
+        req.check('body', `Invalid question!`).notEmpty();
+        req.check('subject', 'Enter subject!').notEmpty();
         var errors = req.validationErrors()
         if(errors){
             res.json({
@@ -21,6 +21,14 @@ let createQuestion = (req,res,next)=>{
             var quesimg =  req.body.quesimg;
             var difficulty =  req.body.difficulty;
             var subjectid = req.body.subject;
+            var anscount = 0;
+            var weightage = req.body.weightage;
+            option.map((d,i)=>{
+                if(d.isAnswer){
+                    anscount=anscount+1;
+                }
+            })
+            console.log(anscount);
             var explanation = req.body.explanation;
                 QuestionModel.findOne({ body : body },{status:0})
                 .then((info)=>{
@@ -34,6 +42,7 @@ let createQuestion = (req,res,next)=>{
                                 })
                             }
                             else{
+
                                 var tempdata = QuestionModel({
                                     body: body,
                                     explanation : explanation,
@@ -41,7 +50,9 @@ let createQuestion = (req,res,next)=>{
                                     subject : subjectid,
                                     difficulty :difficulty,
                                     options:op,
-                                    createdBy : req.user._id
+                                    createdBy : req.user._id,
+                                    anscount:anscount,
+                                    weightage : weightage
                                 })
                                 tempdata.save().then(()=>{
                                     res.json({

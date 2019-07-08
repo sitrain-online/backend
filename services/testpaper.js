@@ -23,7 +23,6 @@ let createEditTest = (req,res,next)=>{
         if(_id!=null){
             TestPaperModel.findOneAndUpdate({
                 _id : _id,
-
             },
             {
                 title : title,
@@ -44,7 +43,7 @@ let createEditTest = (req,res,next)=>{
         var type =  req.body.type;
         var title =  req.body.title;
         var questionsid =  req.body.questions;
-        var difficulty =  req.body.difficulty;
+        var difficulty =  req.body.difficulty || null;
         var organisation = req.body.organisation;
         var duration = req.body.duration;
             TestPaperModel.findOne({ title : title,type : type,testbegins : 0 },{status:0})

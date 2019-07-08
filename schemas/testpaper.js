@@ -36,7 +36,7 @@ var testschema = new mongoose.Schema({
     difficulty : {
         type : Number,
         default : 1,
-        required : true
+        required : false
     },
     testbegins : {
         type : Boolean,
