@@ -33,6 +33,7 @@ let createQuestion = (req,res,next)=>{
                 QuestionModel.findOne({ body : body },{status:0})
                 .then((info)=>{
                     if(!info){
+                        console.log(option);
                         options.insertMany(option,(err,op)=>{
                             if(err){
                                 console.log(err);
