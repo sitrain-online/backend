@@ -5,12 +5,12 @@ let trainerRegister = (req,res,next)=>{
     console.log(req.user.type);
     var _id = req.body._id || null;
     if(req.user.type==='ADMIN'){
-        req.check('name', `invalid name`).notEmpty();
+        req.check('name', `Invalid name`).notEmpty();
         if(_id==null){
-            req.check('password','invalid password').isLength({min : 5,max :6});
-            req.check('emailid', ` invalid email address`).isEmail().notEmpty();
+            req.check('password','Invalid password').isLength({min : 5,max :6});
+            req.check('emailid', ` Invalid email address`).isEmail().notEmpty();
         }
-        req.check('contact','invalid contact number').isLength({min : 13,max :13}).isNumeric({no_symbols: false});
+        req.check('contact','Invalid contact number').isLength({min : 13,max :13}).isNumeric({no_symbols: false});
         var errors = req.validationErrors()
         if(errors){
             res.json({
