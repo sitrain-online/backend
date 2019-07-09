@@ -23,7 +23,16 @@ var testschema = new mongoose.Schema({
             }
         
     ],
-
+    subjects : [
+    
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'SubjectModel',
+            required : false
+    
+        }
+    
+    ],
     duration : {
         type : Number,
         required : true

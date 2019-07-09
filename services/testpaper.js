@@ -46,6 +46,7 @@ let createEditTest = (req,res,next)=>{
         var difficulty =  req.body.difficulty || null;
         var organisation = req.body.organisation;
         var duration = req.body.duration;
+        var subjects = req.body.subjects;
             TestPaperModel.findOne({ title : title,type : type,testbegins : 0 },{status:0})
             .then((info)=>{
                 if(!info){
@@ -56,7 +57,8 @@ let createEditTest = (req,res,next)=>{
                         difficulty : difficulty,
                         organisation : organisation,
                         duration :duration,
-                        createdBy : req.user._id
+                        createdBy : req.user._id,
+                        subjects : subjects
                     })
                     tempdata.save().then(()=>{
                         res.json({
