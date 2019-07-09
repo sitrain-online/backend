@@ -1,4 +1,5 @@
 var TraineeEnterModel = require("../models/trainee");
+var TestPaperModel = require("../models/testpaper");
 var FeedbackModel = require("../models/feedback");
 
 let traineeenter = (req,res,next)=>{
@@ -20,24 +21,51 @@ let traineeenter = (req,res,next)=>{
         var testid = req.body.testid;
         var location = req.body.location;
 
-        var tempdata = TraineeEnterModel({
-            name: name,
-            emailid : emailid,
-            contact : contact,
-            organisation : organisation,
-            testid : testid,
-            location : location
-        })
-        tempdata.save().then(()=>{
-            res.json({
-                success : true,
-                message : ` Entered successfully!`
-            })
+        TestPaperModel.findOne({ testid : testid, isRegistrationavailable : true }).then((info)=>{
+            if(info.length!=0){
+                TraineeEnterModel.find({$or:[{emailid : emailid , testid : testid},{contact : contact, testid : testid}]}).then((data)=>{
+                    if(data.length!=0){
+                        res.json({
+                            success : false,
+                            message : "This id has already been registered for this test!"
+                        })
+                    }
+                    else{
+                        var tempdata = TraineeEnterModel({
+                            name: name,
+                            emailid : emailid,
+                            contact : contact,
+                            organisation : organisation,
+                            testid : testid,
+                            location : location
+                        })
+                        tempdata.save().then(()=>{
+                            res.json({
+                                success : true,
+                                message : `Trainee registered successfully!`
+                            })
+                        }).catch((err)=>{
+                            console.log(err);
+                            res.status(500).json({
+                                success : false,
+                                message : "Server error!"
+                            })
+                        })
+                    }
+                })
+                
+            }
+            else{
+                res.json({
+                    success : false,
+                    message : ` Registration for this test has been closed!`
+                })
+            }
+            
         }).catch((err)=>{
-            console.log(err);
             res.status(500).json({
                 success : false,
-                message : "Unable to enter!"
+                message : `Server error!`
             })
         })
     }
