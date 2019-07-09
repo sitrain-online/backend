@@ -56,6 +56,10 @@ var testschema = new mongoose.Schema({
         required : true,
         default : 1,
         type : Boolean
+    },
+    createdBy:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'UserModel'
     }
 
 

@@ -60,10 +60,11 @@ let createEditTest = (req,res,next)=>{
                         createdBy : req.user._id,
                         subjects : subjects
                     })
-                    tempdata.save().then(()=>{
+                    tempdata.save().then((d)=>{
                         res.json({
                             success : true,
-                            message : `New testpaper created successfully!`
+                            message : `New testpaper created successfully!`,
+                            testid : d._id
                         })
                     }).catch((err)=>{
                         console.log(err);
