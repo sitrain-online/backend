@@ -60,7 +60,11 @@ var testschema = new mongoose.Schema({
     createdBy:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'UserModel'
-    }
+    },
+    isRegistrationavailable :{
+        type : Boolean,
+        deafult : true
+    },
 
 
 },
