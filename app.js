@@ -30,6 +30,7 @@ var testpaper = require("./routes/testpaper");
 var up = require("./routes/fileUpload");
 var trainee = require("./routes/trainee");
 var stopRegistration = require("./routes/stopRegistration");
+var sendmail = require("./services/mail").sendmail;
 
 
 
@@ -48,7 +49,11 @@ app.use((req,res,next)=>{
 app.use(passport.initialize());
 app.use(passport.session());
 
-
+sendmail("kirankumardas224@gmail.com","blah-bla-blah","blaaaaa-blaaah").then(()=>{
+    console.log("success")
+}).catch(err=>{
+    console.log(err)
+})
 
 //bind routes
 app.use("/api/v1/admin",passport.authenticate('user-token', { session : false }),admin);
@@ -57,7 +62,7 @@ app.use('/api/v1/subject',passport.authenticate('user-token', { session : false 
 app.use('/api/v1/questions',passport.authenticate('user-token', { session : false }),question);
 app.use('/api/v1/test',passport.authenticate('user-token', { session : false }),testpaper);
 app.use('/api/v1/upload',passport.authenticate('user-token', { session : false }),up);
-app.use('/api/v1/trainee',passport.authenticate('user-token', { session : false }),stopRegistration);
+app.use('/api/v1/trainer',passport.authenticate('user-token', { session : false }),stopRegistration);
 
 app.use('/api/v1/trainee',trainee);
 

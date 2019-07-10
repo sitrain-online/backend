@@ -1,6 +1,7 @@
 var TraineeEnterModel = require("../models/trainee");
 var TestPaperModel = require("../models/testpaper");
 var FeedbackModel = require("../models/feedback");
+var sendmail = require("../services/mail").sendmail
 
 let traineeenter = (req,res,next)=>{
     req.check('emailid', ` Invalid email address`).isEmail().notEmpty();
@@ -22,9 +23,9 @@ let traineeenter = (req,res,next)=>{
         var location = req.body.location;
 
         TestPaperModel.findOne({ testid : testid, isRegistrationavailable : true }).then((info)=>{
-            if(info.length!=0){
-                TraineeEnterModel.find({$or:[{emailid : emailid , testid : testid},{contact : contact, testid : testid}]}).then((data)=>{
-                    if(data.length!=0){
+            if(info){
+                TraineeEnterModel.findOne({$or:[{emailid : emailid , testid : testid},{contact : contact, testid : testid}]}).then((data)=>{
+                    if(data){
                         res.json({
                             success : false,
                             message : "This id has already been registered for this test!"
@@ -39,7 +40,8 @@ let traineeenter = (req,res,next)=>{
                             testid : testid,
                             location : location
                         })
-                        tempdata.save().then(()=>{
+                        tempdata.save().then((u)=>{
+                            sendmail(emailid,"Registered Successfully","You have been successfully registered for the test. Click on the link given to take test ","<a href=''>")
                             res.json({
                                 success : true,
                                 message : `Trainee registered successfully!`
@@ -63,6 +65,7 @@ let traineeenter = (req,res,next)=>{
             }
             
         }).catch((err)=>{
+            console.log(err)
             res.status(500).json({
                 success : false,
                 message : `Server error!`

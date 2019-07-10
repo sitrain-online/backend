@@ -4,5 +4,9 @@
     },
     "jwt": {
         "secret" : "Sitrain"
-    }  
+    },
+    "mail-credentials" : {
+        "userid" :"periwal.rupali@gmail.com",
+        "password" : "gigihadid"
+    }
 }
