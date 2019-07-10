@@ -248,7 +248,11 @@ let basicTestdetails = (req,res,next)=>{
     
 
 }
-
+ let getTestquestions = (req,res,next)=>{
+     if(req.user.type==="TRAINER"){
+         var testid = req.body.id
+     }
+ }
 
 
  
