@@ -22,7 +22,7 @@ let traineeenter = (req,res,next)=>{
         var testid = req.body.testid;
         var location = req.body.location;
 
-        TestPaperModel.findOne({ testid : testid, isRegistrationavailable : true }).then((info)=>{
+        TestPaperModel.findOne({ _id : testid, isRegistrationavailable : true }).then((info)=>{
             if(info){
                 TraineeEnterModel.findOne({$or:[{emailid : emailid , testid : testid},{contact : contact, testid : testid}]}).then((data)=>{
                     if(data){
