@@ -57,7 +57,7 @@ app.use('/api/v1/subject',passport.authenticate('user-token', { session : false 
 app.use('/api/v1/questions',passport.authenticate('user-token', { session : false }),question);
 app.use('/api/v1/test',passport.authenticate('user-token', { session : false }),testpaper);
 app.use('/api/v1/upload',passport.authenticate('user-token', { session : false }),up);
-app.use('/api/v1/trainee',passport.authenticate('user-token', { session : false }),stopRegistration);
+app.use('/api/v1/trainer',passport.authenticate('user-token', { session : false }),stopRegistration);
 
 app.use('/api/v1/trainee',trainee);
 
