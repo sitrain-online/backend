@@ -4,7 +4,7 @@ let stopRegistration = (req,res,next)=>{
     if(req.user.type==='TRAINER'){
         var id  =  req.body.id;
         var s = req.body.status;
-        TestPaperModel.findOneAndUpdate({_id : id},{isRegitrationavailable : s})      
+        TestPaperModel.findOneAndUpdate({_id : id},{isRegistrationavailable : s})      
         .exec(function (err){
             if (err){
                 console.log(err)
