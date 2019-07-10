@@ -3,5 +3,5 @@ var router = express.Router();
 
 var stopRegistraion = require("../services/registrationlink");
 
-router.post("/registraion/stop",stopRegistraion.stopRegistration)
+router.post("/registration/stop",stopRegistraion.stopRegistration)
 module.exports = router;
