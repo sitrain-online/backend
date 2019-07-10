@@ -4,8 +4,9 @@ var FeedbackModel = require("../models/feedback");
 var sendmail = require("../services/mail").sendmail
 
 let traineeenter = (req,res,next)=>{
-    req.check('emailid', ` Invalid email address`).isEmail().notEmpty();
-    req.check('contact','Invalid contact').isLength({min : 13,max :13}).isNumeric({no_symbols: false});
+    req.check('emailid', ` Invalid email address.`).isEmail().notEmpty();
+    req.check('name','This field is required.').notEmpty();
+    req.check('contact','Invalid contact.').isLength({min : 13,max :13}).isNumeric({no_symbols: false});
     var errors = req.validationErrors()
     if(errors){
         res.json({
@@ -101,34 +102,34 @@ let feedback = (req,res,next)=>{
         })
     }
     
-    let resendmail = (req,res,next)=>{
-        var userid = req.body.id;
-        TraineeEnterModel.findById(userid,{emailid:1,testid : 1}).then((info)=>{
-            if(info){
-                console.log(info)
-                sendmail(info.emailid,"Registered Successfully",`You have been successfully registered for the test. Click on the link given to take test  "${req.protocol + '://' + req.get('host')}/trainee/taketest?testid=${info.testid}&traineeid=${info._id}"`).then((dd)=>{
-                    console.log(dd)
-                }).catch((errr)=>{
-                    console.log(errr);
-                })
-                res.json({
-                    success : true,
-                    message : `Link sent successfully!`,
+let resendmail = (req,res,next)=>{
+    var userid = req.body.id;
+    TraineeEnterModel.findById(userid,{emailid:1,testid : 1}).then((info)=>{
+        if(info){
+            console.log(info)
+            sendmail(info.emailid,"Registered Successfully",`You have been successfully registered for the test. Click on the link given to take test  "${req.protocol + '://' + req.get('host')}/trainee/taketest?testid=${info.testid}&traineeid=${info._id}"`).then((dd)=>{
+                console.log(dd)
+            }).catch((errr)=>{
+                console.log(errr);
+            })
+            res.json({
+                success : true,
+                message : `Link sent successfully!`,
 
-                })
+            })
 
-            }
-            else{
-                res.json({
-                    success : false,
-                    message : "This user has not been registered."
+        }
+        else{
+            res.json({
+                success : false,
+                message : "This user has not been registered."
 
-                })
-            }
+            })
+        }
 
 
-        })
+    })
 
-    }
+}
 
 module.exports = {traineeenter,feedback,resendmail}
