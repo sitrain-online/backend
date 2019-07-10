@@ -10,6 +10,7 @@ let getdomain = (req,res,next)=>{
     }
     else{
         
+
     }
 
 }

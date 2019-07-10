@@ -63,7 +63,8 @@ var testschema = new mongoose.Schema({
     },
     isRegistrationavailable :{
         type : Boolean,
-        deafult : true
+        default : true,
+        required : true
     },
 
 

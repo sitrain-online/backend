@@ -44,7 +44,8 @@ let traineeenter = (req,res,next)=>{
                             sendmail(emailid,"Registered Successfully","You have been successfully registered for the test. Click on the link given to take test ","<a href=''>")
                             res.json({
                                 success : true,
-                                message : `Trainee registered successfully!`
+                                message : `Trainee registered successfully!`,
+                                user : u
                             })
                         }).catch((err)=>{
                             console.log(err);
