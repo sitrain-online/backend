@@ -11,13 +11,13 @@ let transporter = nodemailer.createTransport({
     }
 });
 
-let sendmail = (toid,sub,body,html=null)=>{
+let sendmail = (toid,sub,text,html)=>{
     return transporter.sendMail({
         from: '"sitrain"<sitrain@siemens.com>',
         to: toid,
         subject: sub,
-        text: body,
-        html: html
+        text: text,
+        html: html || null
     });
 }
 

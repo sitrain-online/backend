@@ -41,7 +41,11 @@ let traineeenter = (req,res,next)=>{
                             location : location
                         })
                         tempdata.save().then((u)=>{
-                            sendmail(emailid,"Registered Successfully","You have been successfully registered for the test. Click on the link given to take test ","<a href=''>")
+                                sendmail(emailid,"Registered Successfully",`You have been successfully registered for the test. Click on the link given to take test  "${req.protocol + '://' + req.get('host')}/trainee/taketest?testid=${testid}&traineeid=${u._id}"`).then((dd)=>{
+                                    console.log(dd)
+                                }).catch((errr)=>{
+                                    console.log(errr);
+                                })
                             res.json({
                                 success : true,
                                 message : `Trainee registered successfully!`,
@@ -97,5 +101,34 @@ let feedback = (req,res,next)=>{
         })
     }
     
+    let resendmail = (req,res,next)=>{
+        var userid = req.body.id;
+        TraineeEnterModel.findById(userid,{emailid:1,testid : 1}).then((info)=>{
+            if(info){
+                console.log(info)
+                sendmail(info.emailid,"Registered Successfully",`You have been successfully registered for the test. Click on the link given to take test  "${req.protocol + '://' + req.get('host')}/trainee/taketest?testid=${info.testid}&traineeid=${info._id}"`).then((dd)=>{
+                    console.log(dd)
+                }).catch((errr)=>{
+                    console.log(errr);
+                })
+                res.json({
+                    success : true,
+                    message : `Link sent successfully!`,
 
-module.exports = {traineeenter,feedback}
+                })
+
+            }
+            else{
+                res.json({
+                    success : false,
+                    message : "This user has not been registered."
+
+                })
+            }
+
+
+        })
+
+    }
+
+module.exports = {traineeenter,feedback,resendmail}
