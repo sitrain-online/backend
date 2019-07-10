@@ -1,16 +1,8 @@
 
 let getdomain = (req,res,next)=>{
-    var errors = req.validationErrors()
-    if(errors){
-        res.json({
-            success : false,
-            message : 'Invalid inputs',
-            errors : errors
-        })
-    }
-    else{
-        
-
-    }
-
+    var testid='1234';
+    var userid='7899';
+    res.json({url:`${req.protocol + '://' + req.get('host')}/trainee/taketest?testid=${testid}&traineeid=${userid}`});
 }
+module.exports = {getdomain};
+
