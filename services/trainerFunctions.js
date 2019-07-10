@@ -3,6 +3,7 @@ let options = require("../models/option");
 let tool = require("./tool");
 
 
+
 let createQuestion = (req,res,next)=>{
     if(req.user.type==='TRAINER'){
         req.check('body', `Invalid question!`).notEmpty();
@@ -224,9 +225,10 @@ let getSingleQuestion = (req,res,next)=>{
     }    
 }
 
+
 //create test papers
 
-module.exports = { createQuestion, getAllQuestions, getSingleQuestion, deleteQuestion }
+module.exports = { createQuestion, getAllQuestions, getSingleQuestion, deleteQuestion}
 
 
 
