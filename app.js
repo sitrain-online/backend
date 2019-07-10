@@ -30,6 +30,7 @@ var testpaper = require("./routes/testpaper");
 var up = require("./routes/fileUpload");
 var trainee = require("./routes/trainee");
 var stopRegistration = require("./routes/stopRegistration");
+var sendmail = require("./services/mail").sendmail;
 
 
 
@@ -48,7 +49,11 @@ app.use((req,res,next)=>{
 app.use(passport.initialize());
 app.use(passport.session());
 
-
+sendmail("kirankumardas224@gmail.com","blah-bla-blah","blaaaaa-blaaah").then(()=>{
+    console.log("success")
+}).catch(err=>{
+    console.log(err)
+})
 
 //bind routes
 app.use("/api/v1/admin",passport.authenticate('user-token', { session : false }),admin);
