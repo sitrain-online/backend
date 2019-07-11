@@ -250,11 +250,55 @@ let basicTestdetails = (req,res,next)=>{
 }
  let getTestquestions = (req,res,next)=>{
      if(req.user.type==="TRAINER"){
-         var testid = req.body.id
-     }
+         var testid = req.body.id;
+         TestPaperModel.findById(testid,{type:0,title:0,subjects:0,duration:0,questions:1,organisation:0,difficulty:0,testbegins:0,status:0,createdBy:0,isRegistrationavailable:0})
+        .populate('questions','body')
+        .populate({ path: 'questions', 
+        populate: {  
+            path: 'options',
+            model: options
+        }
+
+    })
+       
+        .exec(function (err, getTestquestions){
+            if(err){
+                console.log(err)
+                res.status(500).json({
+                    success : false,
+                    message : "Unable to fetch details"
+                })
+            }
+            else{
+                if(!getTestquestions){
+                    res.json({
+                        success : false,
+                        message : 'Invalid test id.'
+                    })
+
+                }
+                else{
+                    res.json({
+                        success : true,
+                        message : 'Success',
+                        data : getTestquestions
+                    })
+
+                }
+            }
+
+        })
+    }
+    else{
+        res.status(401).json({
+            success : false,
+            message : "Permissions not granted!"
+        })
+    }
+     
  }
 
 
  
 
-module.exports = {createEditTest,getSingletest,getAlltests,deleteTest,basicTestdetails}
+module.exports = {createEditTest,getSingletest,getAlltests,deleteTest,basicTestdetails,getTestquestions}
