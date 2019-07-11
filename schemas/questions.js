@@ -35,8 +35,7 @@ var questionschema = new mongoose.Schema({
     },
     quesimg: { 
         required : false,
-        data: Buffer,
-        contentType: String 
+        type : String
     },
     difficulty:{
         required : true,
