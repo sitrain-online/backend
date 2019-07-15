@@ -27,7 +27,7 @@ let stopRegistration = (req,res,next)=>{
                     })
                 }
                 else{
-                    res.status(500).json({
+                    res.json({
                         success : false,
                         message : "Unable to change registration status"
                     })
