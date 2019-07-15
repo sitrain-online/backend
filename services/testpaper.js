@@ -286,7 +286,7 @@ let basicTestdetails = (req,res,next)=>{
                     res.json({
                         success : true,
                         message : 'Success',
-                        data : getTestquestions
+                        data : getTestquestions.questions
                     })
 
                 }

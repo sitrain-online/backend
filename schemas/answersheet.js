@@ -13,7 +13,30 @@ var answersheetschema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref : 'TraineeEnterModel',
         required : true
-    }
+    },
+    questions : [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref :  'QuestionModel',
+            required : true
+        }
+    ],
+    answers : [
+        {
+            questionid : {
+                type : String,
+                required : true
+            },
+            chosenOption : [
+                {
+                    type : mongoose.Schema.Types.ObjectId,
+                    ref : 'options',
+                    required : false
+                }
+               
+            ]
+        }
+    ]
 })
 
 module.exports = answersheetschema;

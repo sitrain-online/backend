@@ -188,7 +188,8 @@ let Answersheet = (req,res,next)=>{
         console.log(info);
         if(info[0].length && info[1].length){
             AnswersheetModel.find({userid:userid,testid:testid}).then((data)=>{
-                if(data){
+                console.log(data)
+                if(data.length){
                     res.json({
                         success : true,
                         message : 'Answer Sheet already exists!',
@@ -196,11 +197,71 @@ let Answersheet = (req,res,next)=>{
                     })
                 }
                 else{
-                     var startTime = req.body.startTime
-                     
+                     var startTime = new Date();
+                     TestPaperModel.findById(testid,{questions : 1})
+                     .populate({
+                        path:'questions',
+                        model : QuestionModel,
+                        select:{'options' : 1,'anscount' : 1},
+                            populate:{
+                                path:'options',
+                                model:options
+                            }
+                    }).exec(function (err, data){
+                        if(err){
+                            console.log(err)
+                            res.status(500).json({
+                                success : false,
+                                message : "Unable to fetch details"
+                            })
+                        }
+                        else{
+                            var qus = data.questions;
+                            var opts = qus.map((d,i)=>{
+                                options=[];
+                                for(var i = 0;i<d.anscount;i++){
+                                    options.push(null)
+                                }
+                                return({
+                                    questionid:d._id,
+                                    chosenOption:options
+                                })
+                            })
+                            var tempdata = AnswersheetModel({
+                                startTime:startTime,
+                                questions : info[1][0].questions,
+                                answers:opts,
+                                testid:testid,
+                                userid:userid
+                            })
+                            tempdata.save().then((Answersheet)=>{
+                                res.json({
+                                    success : true,
+                                    message : 'Test has started!',
+                                    data: Answersheet
+                                })
+
+                            }).catch((error)=>{
+                                res.status(500).json({
+                                    success : false,
+                                    message : "Unable to fetch details"
+                                })
+                            })
+                            
+                        }
+                
+                    })
                 }
             })
         }
+        else{
+            res.json({
+                success : false,
+                message :'Invalid URL'
+            })
+        }
+    }).catch((err)=>{
+        console.log(err)
     })
 }
 
