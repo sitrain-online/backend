@@ -49,7 +49,7 @@ var testschema = new mongoose.Schema({
     },
     testbegins : {
         type : Boolean,
-        default : 0,
+        default : false,
         required : true
     },
     status : {
@@ -66,6 +66,11 @@ var testschema = new mongoose.Schema({
         default : true,
         required : true
     },
+    testconducted : {
+        type : Boolean,
+        default : false,
+        required : true
+    }
 
 
 },

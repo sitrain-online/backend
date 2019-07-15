@@ -5,5 +5,8 @@ var trainee = require("../services/trainee");
 router.post('/enter',trainee.traineeenter);
 router.post('/feedback',trainee.feedback);
 router.post('/resend/testlink',trainee.resendmail);
+router.post('/correct/answers',trainee.correctAnswers);
+router.post('/answersheet',trainee.Answersheet);
+
 
 module.exports = router;

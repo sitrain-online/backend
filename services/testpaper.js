@@ -1,8 +1,10 @@
 let QuestionModel = require("../models/questions");
 let TestPaperModel = require("../models/testpaper");
+let TraineeEnterModel = require("../models/trainee");
 let tool = require("./tool");
 let options = require("../models/option");
 let SubjectModel = require("../models/subject");
+
 let createEditTest = (req,res,next)=>{
     var _id = req.body._id || null;
     if(req.user.type==='TRAINER'){
@@ -248,19 +250,22 @@ let basicTestdetails = (req,res,next)=>{
     
 
 }
+
  let getTestquestions = (req,res,next)=>{
      if(req.user.type==="TRAINER"){
          var testid = req.body.id;
-         TestPaperModel.findById(testid,{type:0,title:0,subjects:0,duration:0,questions:1,organisation:0,difficulty:0,testbegins:0,status:0,createdBy:0,isRegistrationavailable:0})
+         TestPaperModel.findById(testid,{type:0,title:0,subjects:0,duration:0,organisation:0,difficulty:0,testbegins:0,status:0,createdBy:0,isRegistrationavailable:0})
         .populate('questions','body')
-        .populate({ path: 'questions', 
-        populate: {  
-            path: 'options',
-            model: options
-        }
+        .populate({ 
+          path: 'questions',
+          model: QuestionModel,
+          select : {'body': 1,'quesimg' : 1,'weightage':1,'anscount': 1},
+            populate: {  
+                path: 'options',
+                model: options
+            }
 
     })
-       
         .exec(function (err, getTestquestions){
             if(err){
                 console.log(err)
@@ -298,7 +303,92 @@ let basicTestdetails = (req,res,next)=>{
      
  }
 
+ let getCandidates = (req,res,next)=>{
+    if(req.user.type==="TRAINER"){
+        var testid = req.body.id;
+        TraineeEnterModel.find({testid:testid},{testid:0})
+        .then((getCandidates)=>{
+            res.json({
+                success: true,
+                message :  "success",
+                data : getCandidates
+            })
+        }).catch((err)=>{
+            res.status(500).json({
+                success : false,
+                message : "Unable to get candidates!"
+            })
+        })
+    }
+    else{
+        res.status(401).json({
+            success : false,
+            message : "Permissions not granted!"
+        })
+    }
+ }
+
+ let beginTest = (req,res,next)=>{
+    if(req.user.type==="TRAINER"){
+        var id = req.body.id;
+        TestPaperModel.findOneAndUpdate({_id:id,testconducted : false},{testbegins:1,isRegistrationavailable:0},{new: true})
+        .then((data)=>{
+            if(data){
+                res.json({
+                    success : true,
+                    message : 'Test has been started.',
+                    data : {
+                        isRegistrationavailable: data.isRegistrationavailable,
+                        testbegins : data.testbegins,
+                        testconducted : data.testconducted
+                    }
+                })
+            }
+            else{
+                res.json({
+                    success : false,
+                    message : "Unable to start test."
+                })
+            }
+        }).catch((err)=>{
+            res.status(500).json({
+                success : false,
+                message : "Server Error"
+            })
+        })
+    }
+    else{
+        res.status(401).json({
+            success : false,
+            message : "Permissions not granted!"
+        })
+    }
+ }
+
+ let endTest = (req,res,next)=>{
+    if(req.user.type==="TRAINER"){
+        var id = req.body.id;
+        TestPaperModel.findOneAndUpdate({_id:id,testconducted:0,testbegins:1},{testbegins:0,testconducted:1})
+        .then(()=>{
+            res.json({
+                success : true,
+                message : 'The test has ended.'
+            })
+        }).catch((err)=>{
+            res.status(500).json({
+                success : false,
+                message : "Server Error"
+            })
+        })
+    }
+    else{
+        res.status(401).json({
+            success : false,
+            message : "Permissions not granted!"
+        })
+    }
+ }
 
  
 
-module.exports = {createEditTest,getSingletest,getAlltests,deleteTest,basicTestdetails,getTestquestions}
+module.exports = {createEditTest,getSingletest,getAlltests,deleteTest,basicTestdetails,getTestquestions,getCandidates,beginTest,endTest}
