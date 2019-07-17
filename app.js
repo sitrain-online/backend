@@ -59,11 +59,12 @@ app.use('/api/v1/questions',passport.authenticate('user-token', { session : fals
 app.use('/api/v1/test',passport.authenticate('user-token', { session : false }),testpaper);
 app.use('/api/v1/upload',passport.authenticate('user-token', { session : false }),up);
 app.use('/api/v1/trainer',passport.authenticate('user-token', { session : false }),stopRegistration);
+app.use('/api/v1/trainee',trainee);
 app.use('/api/v1/lala',dummy)
 
 
 
-app.use('/api/v1/trainee',trainee);
+
 
 
 app.use('/api/v1/login',login);

@@ -265,4 +265,48 @@ let Answersheet = (req,res,next)=>{
     })
 }
 
-module.exports = {traineeenter,feedback,resendmail,correctAnswers,Answersheet}
+let flags = (req,res,next)=>{
+    var testid = req.body.testid;
+    var traineeid = req.body.traineeid;
+    const p1 = AnswersheetModel.findOne({userid : traineeid,testid : testid},{_id : 1,startTime  :1});
+    const p2 = TraineeEnterModel.findOne({_id : traineeid , testid : testid},{_id : 1});
+    const p3 = TestPaperModel.findById(testid,{testbegins : 1, testconducted : 1,duration : 1});
+    var present = new Date();
+
+    Promise.all([p1,p2,p3]).then((info)=>{
+        console.log(info)
+        if(info[1]===null){
+            res.json({
+                success : false,
+                message : 'Invalid URL!'
+            })
+        }else{
+            var startedWriting = false;
+            var pending=null;
+            if(info[0]!==null){
+                startedWriting = true;
+                pending = info[2].duration - ((present - info[0].startTime)/(1000*60))
+            }
+            res.json({
+                success : true,
+                message : 'Successfull',
+                data : {
+                    testbegins : info[2].testbegins,
+                    testconducted:info[2].testconducted,
+                    startedWriting:startedWriting,
+                    pending : pending
+                }
+            })
+        }
+        
+        
+    }).catch((error)=>{
+        res.status(500).json({
+            success : false,
+            message : "Unable to fetch details"
+        })
+    })
+
+}
+
+module.exports = {traineeenter,feedback,resendmail,correctAnswers,Answersheet,flags}
