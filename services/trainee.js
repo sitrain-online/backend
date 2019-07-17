@@ -328,7 +328,7 @@ let flags = (req,res,next)=>{
                         testconducted:info[2].testconducted,
                         startedWriting:startedWriting,
                         pending : pending,
-                        completed : info[0].completed
+                        completed : false
                     }
                 })
 
@@ -339,6 +339,7 @@ let flags = (req,res,next)=>{
         
         
     }).catch((error)=>{
+        console.log(error)
         res.status(500).json({
             success : false,
             message : "Unable to fetch details"
