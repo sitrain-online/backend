@@ -268,7 +268,7 @@ let Answersheet = (req,res,next)=>{
 let flags = (req,res,next)=>{
     var testid = req.body.testid;
     var traineeid = req.body.traineeid;
-    const p1 = AnswersheetModel.findOne({userid : traineeid,testid : testid},{_id : 1,startTime  :1});
+    const p1 = AnswersheetModel.findOne({userid : traineeid,testid : testid},{_id : 1,startTime  :1,completed : 1});
     const p2 = TraineeEnterModel.findOne({_id : traineeid , testid : testid},{_id : 1});
     const p3 = TestPaperModel.findById(testid,{testbegins : 1, testconducted : 1,duration : 1});
     var present = new Date();

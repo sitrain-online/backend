@@ -36,7 +36,12 @@ var answersheetschema = new mongoose.Schema({
                
             ]
         }
-    ]
+    ],
+    completed :{
+        type : Boolean,
+        default : false,
+        required : true
+    }
 })
 
 module.exports = answersheetschema;
