@@ -8,6 +8,7 @@ router.post('/resend/testlink',trainee.resendmail);
 router.post('/correct/answers',trainee.correctAnswers);
 router.post('/answersheet',trainee.Answersheet);
 router.post('/flags',trainee.flags);
+router.post('/details',trainee.TraineeDetails);
 
 
 module.exports = router;

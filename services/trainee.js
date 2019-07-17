@@ -309,4 +309,27 @@ let flags = (req,res,next)=>{
 
 }
 
-module.exports = {traineeenter,feedback,resendmail,correctAnswers,Answersheet,flags}
+let TraineeDetails = (req,res,next)=>{
+    var traineeid = req.body._id;
+    TraineeEnterModel.findById(traineeid,{name:1,emailid:1,contact:1}).then((info)=>{
+        if(info){
+            res.json({
+                success : true,
+                message : 'Trainee details',
+                data : info
+            })
+        }else{
+            res.json({
+                success : false,
+                message : 'This trainee does not exists'
+            })
+        }
+    }).catch((error)=>{
+        res.status(500).json({
+            success : false,
+            message : "Unable to fetch details"
+        })
+    })
+}
+
+module.exports = {traineeenter,feedback,resendmail,correctAnswers,Answersheet,flags,TraineeDetails}
