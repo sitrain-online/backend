@@ -287,17 +287,39 @@ let flags = (req,res,next)=>{
                 startedWriting = true;
                 pending = info[2].duration - ((present - info[0].startTime)/(1000*60))
             }
-            res.json({
-                success : true,
-                message : 'Successfull',
-                data : {
-                    testbegins : info[2].testbegins,
-                    testconducted:info[2].testconducted,
-                    startedWriting:startedWriting,
-                    pending : pending,
-                    completed : info[0].completed
-                }
-            })
+            if(pending<0){
+                AnswersheetModel.findOneAndUpdate({userid : traineeid,testid : testid},{completed : true}).then((result)=>{
+                    res.json({
+                        success : true,
+                        message : 'Successfull',
+                        data : {
+                            testbegins : info[2].testbegins,
+                            testconducted:info[2].testconducted,
+                            startedWriting:startedWriting,
+                            pending : pending,
+                            completed : true
+                        }
+                    })
+                }).catch((error)=>{
+                    res.status(500).json({
+                        success : false,
+                        message : "Unable to fetch details"
+                    })
+                })
+            }else{
+                res.json({
+                    success : true,
+                    message : 'Successfull',
+                    data : {
+                        testbegins : info[2].testbegins,
+                        testconducted:info[2].testconducted,
+                        startedWriting:startedWriting,
+                        pending : pending,
+                        completed : info[0].completed
+                    }
+                })
+            }
+            
         }
         
         
