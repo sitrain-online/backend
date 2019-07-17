@@ -294,7 +294,8 @@ let flags = (req,res,next)=>{
                     testbegins : info[2].testbegins,
                     testconducted:info[2].testconducted,
                     startedWriting:startedWriting,
-                    pending : pending
+                    pending : pending,
+                    completed : info[0].completed
                 }
             })
         }
