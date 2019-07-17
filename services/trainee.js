@@ -181,14 +181,12 @@ let Answersheet = (req,res,next)=>{
     var userid = req.body.userid;
     var testid = req.body.testid;
 
-    const p1= TraineeEnterModel.find({_id:userid,testid:testid});
-    const p2 = TestPaperModel.find({_id:testid,testbegins : true, testconducted : false});
+    var p1= TraineeEnterModel.find({_id:userid,testid:testid});
+    var p2 = TestPaperModel.find({_id:testid,testbegins : true, testconducted : false});
     
     Promise.all([p1,p2]).then((info)=>{
-        console.log(info);
         if(info[0].length && info[1].length){
             AnswersheetModel.find({userid:userid,testid:testid}).then((data)=>{
-                console.log(data)
                 if(data.length){
                     res.json({
                         success : true,
@@ -201,15 +199,13 @@ let Answersheet = (req,res,next)=>{
                      TestPaperModel.findById(testid,{questions : 1})
                      .populate({
                         path:'questions',
-                        model : QuestionModel,
                         select:{'options' : 1,'anscount' : 1},
                             populate:{
-                                path:'options',
-                                model:options
+                                path:'options'
                             }
                     }).exec(function (err, data){
                         if(err){
-                            console.log(err)
+                            console.log(`I am in error ${err}`)
                             res.status(500).json({
                                 success : false,
                                 message : "Unable to fetch details"
@@ -262,6 +258,10 @@ let Answersheet = (req,res,next)=>{
         }
     }).catch((err)=>{
         console.log(err)
+        res.status(500).json({
+            success : false,
+            message : "Unable to fetch details"
+        })
     })
 }
 
@@ -370,5 +370,6 @@ let TraineeDetails = (req,res,next)=>{
         })
     })
 }
+
 
 module.exports = {traineeenter,feedback,resendmail,correctAnswers,Answersheet,flags,TraineeDetails}
