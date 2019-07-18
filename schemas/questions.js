@@ -34,7 +34,8 @@ var questionschema = new mongoose.Schema({
         required : true
     },
     quesimg: { 
-        required : false,
+        required : true,
+        default : null,
         type : String
     },
     difficulty:{
