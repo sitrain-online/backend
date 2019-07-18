@@ -187,7 +187,6 @@ let Testquestions = (req,res,next)=>{
      select : {'body': 1,'quesimg' : 1,'weightage':1,'anscount': 1,',duration' : 1},
        populate: {  
            path: 'options',
-           model: options,
            select : {'optbody' : 1,'optimg' : 1}
        }
 
