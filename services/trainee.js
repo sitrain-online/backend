@@ -330,8 +330,8 @@ let flags = (req,res,next)=>{
             var pending=null;
             if(info[0]!==null){
                 startedWriting = true;
-                pending = info[2].duration - ((present - info[0].startTime)/(1000*60))
-                if(pending<0){
+                pending = info[2].duration - ((present - info[0].startTime)/(1000))
+                if(pending<=0){
                     AnswersheetModel.findOneAndUpdate({userid : traineeid,testid : testid},{completed : true}).then((result)=>{
                         res.json({
                             success : true,
