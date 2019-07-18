@@ -177,6 +177,51 @@ let resendmail = (req,res,next)=>{
 
 }
 
+let Testquestions = (req,res,next)=>{
+    var testid = req.body.id;
+    TestPaperModel.findById(testid,{type:0,title:0,subjects:0,organisation:0,difficulty:0,testbegins:0,status:0,createdBy:0,isRegistrationavailable:0})
+   .populate('questions','body')
+   .populate({ 
+     path: 'questions',
+     model: QuestionModel,
+     select : {'body': 1,'quesimg' : 1,'weightage':1,'anscount': 1,',duration' : 1},
+       populate: {  
+           path: 'options',
+           model: options,
+           select : {'optbody' : 1,'optimg' : 1}
+       }
+
+})
+   .exec(function (err, Testquestions){
+       if(err){
+           console.log(err)
+           res.status(500).json({
+               success : false,
+               message : "Unable to fetch details"
+           })
+       }
+       else{
+           if(!Testquestions){
+               res.json({
+                   success : false,
+                   message : 'Invalid test id.'
+               })
+
+           }
+           else{
+               res.json({
+                   success : true,
+                   message : 'Success',
+                   data : Testquestions.questions
+               })
+
+           }
+       }
+
+   })
+
+}
+
 let Answersheet = (req,res,next)=>{
     var userid = req.body.userid;
     var testid = req.body.testid;
@@ -372,4 +417,4 @@ let TraineeDetails = (req,res,next)=>{
 }
 
 
-module.exports = {traineeenter,feedback,resendmail,correctAnswers,Answersheet,flags,TraineeDetails}
+module.exports = {traineeenter,feedback,resendmail,correctAnswers,Answersheet,flags,TraineeDetails,Testquestions}
