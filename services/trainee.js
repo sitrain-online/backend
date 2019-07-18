@@ -415,5 +415,28 @@ let TraineeDetails = (req,res,next)=>{
     })
 }
 
+let chosenOptions = (req,res,next)=>{
+    var testid = req.body.testid;
+    var userid = req.body.userid;
+    AnswersheetModel.findOne({testid : testid,userid : userid},{answers : 1}).then((info)=>{
+        if(info){
+            res.json({
+                success : true,
+                message : 'Chosen Options',
+                data : info
+            })
+        }else{
+            res.json({
+                success : false,
+                message : 'Answersheet does not exist'
+            })
+        }
+    }).catch((error)=>{
+        res.status(500).json({
+            success : false,
+            message : "Unable to fetch details"
+        })
+    })
+}
 
-module.exports = {traineeenter,feedback,resendmail,correctAnswers,Answersheet,flags,TraineeDetails,Testquestions}
+module.exports = {traineeenter,feedback,resendmail,correctAnswers,Answersheet,flags,chosenOptions,TraineeDetails,Testquestions}
