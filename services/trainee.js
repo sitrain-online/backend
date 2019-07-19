@@ -404,25 +404,24 @@ let TraineeDetails = (req,res,next)=>{
 let chosenOptions = (req,res,next)=>{
     var testid = req.body.testid;
     var userid = req.body.userid;
-    AnswersheetModel.findOne({testid : testid,userid : userid},{answers : 1}).then((info)=>{
-        if(info){
-            res.json({
-                success : true,
-                message : 'Chosen Options',
-                data : info
-            })
-        }else{
+    AnswersheetModel.findOne({testid : testid,userid : userid},{answers : 1})
+    .populate('answers')
+    .exec(function(err,answersheet){
+        if(err){
             res.json({
                 success : false,
                 message : 'Answersheet does not exist'
             })
+            
+        }else{
+            res.json({
+                success : true,
+                message : 'Chosen Options',
+                data : answersheet
+            })
         }
-    }).catch((error)=>{
-        res.status(500).json({
-            success : false,
-            message : "Unable to fetch details"
-        })
     })
+
 }
 
 let UpdateAnswers = (req,res,next)=>{
@@ -440,7 +439,7 @@ let UpdateAnswers = (req,res,next)=>{
             var pending=null;
             pending = info[0].duration*60 - ((present - info[1].startTime)/(1000))
             if(pending>0){
-                AnswersheetModel.findOneAndUpdate({"testid" : testid,"userid":userid,"answers.questionid":questionid},{"answers.chosenOption":newAnswer}).then((info)=>{
+                AnswersModel.findOneAndUpdate({questionid : questionid,userid:userid},{chosenOption : newAnswer}).then((info)=>{
                     console.log(info)
                     res.json({
                         success : true,
