@@ -23,19 +23,11 @@ var answersheetschema = new mongoose.Schema({
     ],
     answers : [
         {
-            questionid : {
-                type : String,
-                required : true
-            },
-            chosenOption : [
-                {
-                    type : mongoose.Schema.Types.ObjectId,
-                    ref : 'options',
-                    required : false
-                }
-               
-            ]
+            type: mongoose.Schema.Types.ObjectId,
+            ref : 'AnswersModel',
+            required : true
         }
+
     ],
     completed :{
         type : Boolean,

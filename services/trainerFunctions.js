@@ -34,7 +34,6 @@ let createQuestion = (req,res,next)=>{
                 QuestionModel.findOne({ body : body },{status:0})
                 .then((info)=>{
                     if(!info){
-                        console.log(option);
                         options.insertMany(option,(err,op)=>{
                             if(err){
                                 console.log(err);
@@ -44,7 +43,13 @@ let createQuestion = (req,res,next)=>{
                                 })
                             }
                             else{
-
+                                var ra=[];
+                                console.log(op)
+                                op.map((d,i)=>{
+                                    if(d.isAnswer){
+                                        ra.push(d._id)
+                                    }
+                                })
                                 var tempdata = QuestionModel({
                                     body: body,
                                     explanation : explanation,
@@ -54,7 +59,8 @@ let createQuestion = (req,res,next)=>{
                                     options:op,
                                     createdBy : req.user._id,
                                     anscount:anscount,
-                                    weightage : weightage
+                                    weightage : weightage,
+                                    rightAnswers:ra
                                 })
                                 tempdata.save().then(()=>{
                                     res.json({

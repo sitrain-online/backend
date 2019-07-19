@@ -7,7 +7,7 @@ var optionschema = new mongoose.Schema({
     },
     optimg: {
         type : String,
-        required : true,
+        required : false,
         default : null
     },
     isAnswer:{

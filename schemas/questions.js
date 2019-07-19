@@ -34,7 +34,7 @@ var questionschema = new mongoose.Schema({
         required : true
     },
     quesimg: { 
-        required : true,
+        required : false,
         default : null,
         type : String
     },
@@ -51,6 +51,10 @@ var questionschema = new mongoose.Schema({
         type: Boolean,
         default : 1,
         required : true
+    },
+    rightAnswers:{
+        type:Array,
+        required:true
     }
 },
 

@@ -11,7 +11,8 @@ const options = {
   reconnectInterval: 500, 
   poolSize: 10, 
   bufferMaxEntries: 0,
-  useNewUrlParser: true
+  useNewUrlParser: true,
+  useFindAndModify :  false
 };
 
 mongoose.connect(config.get('mongodb.connectionString'),options).then(()=>{

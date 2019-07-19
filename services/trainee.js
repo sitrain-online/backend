@@ -5,6 +5,7 @@ var sendmail = require("../services/mail").sendmail;
 var QuestionModel = require("../models/questions");
 var options = require("../models/option");
 var AnswersheetModel = require("../models/answersheet");
+var AnswersModel = require("../models/answers");
 
 let traineeenter = (req,res,next)=>{
     req.check('emailid', ` Invalid email address.`).isEmail().notEmpty();
@@ -224,7 +225,6 @@ let Testquestions = (req,res,next)=>{
 let Answersheet = (req,res,next)=>{
     var userid = req.body.userid;
     var testid = req.body.testid;
-
     var p1= TraineeEnterModel.find({_id:userid,testid:testid});
     var p2 = TestPaperModel.find({_id:testid,testbegins : true, testconducted : false});
     
@@ -238,43 +238,35 @@ let Answersheet = (req,res,next)=>{
                         data : data
                     })
                 }
-                else{
-                     var startTime = new Date();
-                     TestPaperModel.findById(testid,{questions : 1})
-                     .populate({
-                        path:'questions',
-                        select:{'options' : 1,'anscount' : 1},
-                            populate:{
-                                path:'options'
-                            }
-                    }).exec(function (err, data){
+                else{ 
+                    var qus = info[1][0].questions;
+                    var answer = qus.map((d,i)=>{
+                        return({
+                            questionid:d,
+                            chosenOption:[],
+                            userid:userid
+                        })
+                    })
+                    AnswersModel.insertMany(answer,(err,ans)=>{
                         if(err){
-                            console.log(`I am in error ${err}`)
+                            console.log(err);
                             res.status(500).json({
                                 success : false,
-                                message : "Unable to fetch details"
+                                message : "Unable to create Answersheet!"
                             })
-                        }
-                        else{
-                            var qus = data.questions;
-                            var opts = qus.map((d,i)=>{
-                                return({
-                                    questionid:d._id,
-                                    chosenOption:[]
-                                })
-                            })
+                        }else{
+                            var startTime = new Date();
                             var tempdata = AnswersheetModel({
                                 startTime:startTime,
-                                questions : info[1][0].questions,
-                                answers:opts,
+                                questions : qus,
+                                answers:ans,
                                 testid:testid,
                                 userid:userid
                             })
                             tempdata.save().then((Answersheet)=>{
                                 res.json({
                                     success : true,
-                                    message : 'Test has started!',
-                                    data: Answersheet
+                                    message : 'Test has started!'
                                 })
 
                             }).catch((error)=>{
@@ -283,9 +275,7 @@ let Answersheet = (req,res,next)=>{
                                     message : "Unable to fetch details"
                                 })
                             })
-                            
                         }
-                
                     })
                 }
             })
@@ -435,4 +425,58 @@ let chosenOptions = (req,res,next)=>{
     })
 }
 
-module.exports = {traineeenter,feedback,resendmail,correctAnswers,Answersheet,flags,chosenOptions,TraineeDetails,Testquestions}
+let UpdateAnswers = (req,res,next)=>{
+    var testid = req.body.testid;
+    var userid = req.body.userid;
+    var questionid = req.body.qid;
+    var newAnswer = req.body.newAnswer;
+    const p1 = TestPaperModel.findById(testid,{duration : 1});
+    const p2 = AnswersheetModel.findOne({testid : testid,userid:userid,completed : false},{_id:1,startTime:1});
+    
+    var present = new Date();
+    Promise.all([p1,p2])
+    .then((info)=>{
+        if(info[1]){
+            var pending=null;
+            pending = info[0].duration*60 - ((present - info[1].startTime)/(1000))
+            if(pending>0){
+                AnswersheetModel.findOneAndUpdate({"testid" : testid,"userid":userid,"answers.questionid":questionid},{"answers.chosenOption":newAnswer}).then((info)=>{
+                    console.log(info)
+                    res.json({
+                        success : true,
+                        message : 'Answer Updated'
+                    })
+                }).catch((error)=>{
+                    console.log(error)
+                    res.status(500).json({
+                        success : false,
+                        message : "Error occured!"
+                    })
+                })
+            }else{
+                AnswersheetModel.findByIdAndUpdate({testid : testid,userid:userid},{completed : true}).then(()=>{
+                    res.json({
+                        success : false,
+                        message : 'Time is up!'
+                    })
+                }).catch((error)=>{
+                    res.status(500).json({
+                        success : false,
+                        message : "Error occured!"
+                    })
+                })
+            }   
+        }else{
+            res.json({
+                success : false,
+                message : 'Unable to update answer'
+            })
+        }
+    }).catch((error)=>{
+        res.status(500).json({
+            success : false,
+            message : "Error occured!"
+        })
+    })
+}
+module.exports = {traineeenter,feedback,resendmail,correctAnswers,Answersheet,flags,chosenOptions,TraineeDetails,Testquestions,UpdateAnswers}
