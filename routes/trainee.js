@@ -12,6 +12,7 @@ router.post('/details',trainee.TraineeDetails);
 router.post('/paper/questions',trainee.Testquestions);
 router.post('/chosen/options',trainee.chosenOptions);
 router.post('/update/answer',trainee.UpdateAnswers);
+router.post('/end/test',trainee.EndTest);
 
 
 

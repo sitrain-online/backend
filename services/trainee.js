@@ -441,10 +441,18 @@ let UpdateAnswers = (req,res,next)=>{
             if(pending>0){
                 AnswersModel.findOneAndUpdate({questionid : questionid,userid:userid},{chosenOption : newAnswer}).then((info)=>{
                     console.log(info)
-                    res.json({
-                        success : true,
-                        message : 'Answer Updated'
-                    })
+                    if(info){
+                        res.json({
+                            success : true,
+                            message : 'Answer Updated'
+                        })
+                    }else{
+                        res.json({
+                            success : false,
+                            message : 'Question is required!'
+                        })
+                    }
+                   
                 }).catch((error)=>{
                     console.log(error)
                     res.status(500).json({
@@ -478,4 +486,27 @@ let UpdateAnswers = (req,res,next)=>{
         })
     })
 }
-module.exports = {traineeenter,feedback,resendmail,correctAnswers,Answersheet,flags,chosenOptions,TraineeDetails,Testquestions,UpdateAnswers}
+
+let EndTest = (req,res,next)=>{
+    var testid = req.body.testid;
+    var userid = req.body.userid;
+    AnswersheetModel.findOneAndUpdate({testid:testid,userid:userid},{completed : true}).then((info)=>{
+        if(info){
+            res.json({
+                success : true,
+                message : 'Your answers have been submitted'
+            })
+        }else{
+            res.json({
+                success : false,
+                message : 'Unable to submit answers!'
+            })
+        }
+    }).catch((error)=>{
+        res.status(500).json({
+            success : false,
+            message : "Error occured!"
+        })
+    })
+}
+module.exports = {traineeenter,feedback,resendmail,correctAnswers,Answersheet,flags,chosenOptions,TraineeDetails,Testquestions,UpdateAnswers,EndTest}
