@@ -342,7 +342,8 @@ let basicTestdetails = (req,res,next)=>{
                     data : {
                         isRegistrationavailable: data.isRegistrationavailable,
                         testbegins : data.testbegins,
-                        testconducted : data.testconducted
+                        testconducted : data.testconducted,
+                        isResultgenerated : data.isResultgenerated
                     }
                 })
             }
@@ -370,7 +371,9 @@ let basicTestdetails = (req,res,next)=>{
  let endTest = (req,res,next)=>{
     if(req.user.type==="TRAINER"){
         var id = req.body.id;
-        TestPaperModel.findOneAndUpdate({_id:id,testconducted:0,testbegins:1},{testbegins:false,testconducted:true, isResultgenerated:true})
+        TestPaperModel.findOneAndUpdate({_id:id,testconducted:0,testbegins:1,isResultgenerated:0},{testbegins:false,testconducted:true, isResultgenerated:true},{
+            new: true
+          })
         .then((info)=>{
             if(info){
                 console.log(info);
