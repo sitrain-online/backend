@@ -36,7 +36,7 @@ let gresult = (uid,tid)=>{
                 console.log(err);
                 reject(err)
             }else{
-                if(!result){
+                if(!results){
                     AnswersheetModel.findOne({userid:uid,testid:tid,completed : true},{testid:0,userid:0,startTime:0,completed:0})
                     .populate({ path: 'questions',
                         select:{
