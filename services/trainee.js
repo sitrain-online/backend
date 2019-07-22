@@ -515,7 +515,7 @@ let getQuestion = (req,res,next)=>{
     
         let qid = req.body.qid;
         
-        QuestionModel.find({_id : qid , status : 1},{body : 1, options : 1})
+        QuestionModel.find({_id : qid , status : 1},{body : 1, options : 1,quesimg : 1})
         .populate({ 
                 path: 'options',
                 model: options,
