@@ -4,6 +4,8 @@ let TraineeEnterModel = require("../models/trainee");
 let tool = require("./tool");
 let options = require("../models/option");
 let SubjectModel = require("../models/subject");
+let result  =require("../services/excel").result;
+
 
 let createEditTest = (req,res,next)=>{
     var _id = req.body._id || null;
@@ -370,11 +372,22 @@ let basicTestdetails = (req,res,next)=>{
         var id = req.body.id;
         TestPaperModel.findOneAndUpdate({_id:id,testconducted:0,testbegins:1},{testbegins:0,testconducted:1})
         .then(()=>{
-            res.json({
-                success : true,
-                message : 'The test has ended.'
+            result(id).then((sheet)=>{
+                res.json({
+                    success : true,
+                    message : 'The test has ended.',
+                    data : sheet
+                })
+            }).catch((error)=>{
+                console.log(error)
+                res.status(500).json({
+                    success : false,
+                    message : "Server Error"
+                })
             })
+           
         }).catch((err)=>{
+            console.log(err)
             res.status(500).json({
                 success : false,
                 message : "Server Error"

@@ -39,7 +39,16 @@ let result = (testid)=>{
             })
             workbook.xlsx.writeFile(`result-${testid}.xlsx`)
             .then(function(r) {
-              resolve('done')
+              fs.rename(`result-${testid}.xlsx`,`public/result/result-${testid}.xlsx`, (err) => {
+                if (err){
+                  resject(err)
+                }
+                else{
+                  console.log('Rename complete!');
+                  resolve("Done");
+                }
+                
+              });
             }).catch((err)=>{
               console.log(err);
               reject(err)
