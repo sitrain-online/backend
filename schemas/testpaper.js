@@ -70,6 +70,11 @@ var testschema = new mongoose.Schema({
         type : Boolean,
         default : false,
         required : true
+    },
+    isResultgenerated :{
+        type : Boolean,
+        default : false,
+        required : true
     }
 
 

@@ -371,12 +371,16 @@ let basicTestdetails = (req,res,next)=>{
     if(req.user.type==="TRAINER"){
         var id = req.body.id;
         TestPaperModel.findOneAndUpdate({_id:id,testconducted:0,testbegins:1},{testbegins:0,testconducted:1})
-        .then(()=>{
+        .then((info)=>{
             result(id).then((sheet)=>{
                 res.json({
                     success : true,
                     message : 'The test has ended.',
-                    data : sheet
+                    data : {
+                        isRegistrationavailable : info.isRegistrationavailable,
+                        testbegins : info.testbegins,
+                        testconducted : info.testconducted
+                    }
                 })
             }).catch((error)=>{
                 console.log(error)
