@@ -51,10 +51,6 @@ var questionschema = new mongoose.Schema({
         type: Boolean,
         default : 1,
         required : true
-    },
-    rightAnswers:{
-        type:Array,
-        required:true
     }
 },
 
