@@ -27,7 +27,6 @@ var answersheetschema = new mongoose.Schema({
             ref : 'AnswersModel',
             required : true
         }
-
     ],
     completed :{
         type : Boolean,

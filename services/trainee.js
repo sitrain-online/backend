@@ -444,7 +444,8 @@ let UpdateAnswers = (req,res,next)=>{
                     if(info){
                         res.json({
                             success : true,
-                            message : 'Answer Updated'
+                            message : 'Answer Updated',
+                            data : info
                         })
                     }else{
                         res.json({
