@@ -510,4 +510,43 @@ let EndTest = (req,res,next)=>{
         })
     })
 }
-module.exports = {traineeenter,feedback,resendmail,correctAnswers,Answersheet,flags,chosenOptions,TraineeDetails,Testquestions,UpdateAnswers,EndTest}
+ 
+let getQuestion = (req,res,next)=>{
+    
+        let qid = req.body.qid;
+        
+        QuestionModel.find({_id : qid , status : 1},{body : 1, options : 1})
+        .populate({ 
+                path: 'options',
+                model: options,
+                select : {'optbody' : 1,'optimg' : 1}
+            
+    })
+        .exec(function (err, question) {
+            if (err){
+                console.log(err)
+                res.status(500).json({
+                    success : false,
+                    message : "Unable to fetch data"
+                })
+            }
+            else{
+                if(question.length===0){
+                    res.json({
+                        success : false,
+                        message : `No such question exists`,
+                    })
+                }
+                else{
+                    res.json({
+                        success : true,
+                        message : `Success`,
+                        data : question
+                    })
+                }   
+            }
+        })        
+    }
+
+
+module.exports = {traineeenter,feedback,resendmail,correctAnswers,Answersheet,flags,chosenOptions,TraineeDetails,Testquestions,UpdateAnswers,EndTest,getQuestion}

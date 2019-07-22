@@ -41,7 +41,8 @@ let gresult = (uid,tid)=>{
                     .populate({ path: 'questions',
                         select:{
                             'explanation':1,
-                            'weightage':1
+                            'weightage':1,
+                            'body': 1
                         },
                         populate: {  
                             path: 'options',

@@ -32,6 +32,8 @@ var trainee = require("./routes/trainee");
 var stopRegistration = require("./routes/stopRegistration");
 var results = require("./routes/results");
 var dummy = require("./routes/dummy");
+var result = require("./services/excel");
+
 
 
 
@@ -46,6 +48,11 @@ app.use((req,res,next)=>{
     next();
 })
 
+result.result('5d26f6f36b5a2b41f79983ed').then((data)=>{
+    console.log(data);
+}).catch((err)=>{
+    console.log(err);
+})
 
 //passport
 app.use(passport.initialize());
@@ -62,7 +69,8 @@ app.use('/api/v1/upload',passport.authenticate('user-token', { session : false }
 app.use('/api/v1/trainer',passport.authenticate('user-token', { session : false }),stopRegistration);
 app.use('/api/v1/trainee',trainee);
 app.use('/api/v1/final',results);
-app.use('/api/v1/lala',dummy)
+app.use('/api/v1/lala',dummy);
+
 
 
 

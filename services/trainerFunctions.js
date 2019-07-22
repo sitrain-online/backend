@@ -195,7 +195,7 @@ let getSingleQuestion = (req,res,next)=>{
         let _id = req.params._id;
         console.log(_id);
         QuestionModel.find({_id : _id , status : 1},{status : 0})
-        .populate('createdBy', 'name')
+        .populate('questions', 'body')
         .populate('subject', 'topic')
         .populate('options')
         .exec(function (err, question) {
