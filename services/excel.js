@@ -6,6 +6,7 @@ var gresults = require("./generateResults");
 var ResultModel = require("../models/results");
 var AnswersheetModel = require("../models/answersheet");
 var TestpaperModel = require("../models/testpaper");
+var MaxMarks = require("../services/testpaper").MaxMarks;
 
 let result = (testid)=>{
   return new Promise((resolve,reject)=>{
@@ -25,36 +26,43 @@ let result = (testid)=>{
             //console.log(results)
             //resolve(results)
             //excel sheet
-            var worksheet = workbook.addWorksheet('Results',{pageSetup:{paperSize: 9, orientation:'landscape'}});
-            worksheet.columns = [
-              { header: 'Name', key: 'Name', width: 30 },
-              { header: 'Email', key: 'Email', width: 70 },
-              { header: 'Contact', key: 'Contact', width: 50, outlineLevel: 1 },
-              { header: 'Organisation', key: 'Organisation', width: 100 },
-              { header: 'Score', key: 'Score', width: 20 }
+            MaxMarks(testid).then((Mmarks)=>{
+              var worksheet = workbook.addWorksheet('Results',{pageSetup:{paperSize: 9, orientation:'landscape'}});
+              worksheet.columns = [
+                { header: 'Name', key: 'Name', width: 30 },
+                { header: 'Email', key: 'Email', width: 70 },
+                { header: 'Contact', key: 'Contact', width: 50, outlineLevel: 1 },
+                { header: 'Organisation', key: 'Organisation', width: 100 },
+                { header: 'Score', key: 'Score', width: 20 },
+                { header: 'Max Marks', key: 'MaxMarks', width : 20}
 
-            ];
-            workbook.addRow({Type: testid.type});
-            workbook.addRow({Title : testid.title});
-            results.map((d,i)=>{
-            console.log(d.userid.name);
-              worksheet.addRow({Name: d.userid.name, Email: d.userid.emailid, Contact : d.userid.contact,Organisation : d.userid.organisation,Score : d.score});
+              ];
+              workbook.addRow({Type: testid.type});
+              workbook.addRow({Title : testid.title});
+              
+              results.map((d,i)=>{
+              console.log(d.userid.name);
+                worksheet.addRow({Name: d.userid.name, Email: d.userid.emailid, Contact : d.userid.contact,Organisation : d.userid.organisation,Score : d.score,MaxMarks:d.MaxMarks});
+              })
+              workbook.xlsx.writeFile(`result-${testid}.xlsx`)
+              .then(function(r) {
+                fs.rename(`result-${testid}.xlsx`,`public/result/result-${testid}.xlsx`, (err) => {
+                  if (err){
+                    reject(err)
+                  }
+                  else{
+                    console.log('Rename complete!');
+                    resolve("Done");
+                  }
+                  
+                });
+              }).catch((err)=>{
+                console.log(err);
+                reject(err)
+              })
             })
-            workbook.xlsx.writeFile(`result-${testid}.xlsx`)
-            .then(function(r) {
-              fs.rename(`result-${testid}.xlsx`,`public/result/result-${testid}.xlsx`, (err) => {
-                if (err){
-                  resject(err)
-                }
-                else{
-                  console.log('Rename complete!');
-                  resolve("Done");
-                }
-                
-              });
-            }).catch((err)=>{
-              console.log(err);
-              reject(err)
+            .catch((err)=>{
+               reject(err)
             })
           
           }

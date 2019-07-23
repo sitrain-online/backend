@@ -38,6 +38,7 @@ var dummy = require("./routes/dummy");
 
 
 
+
 //configs
 app.use('/public',express.static('public'))
 app.use(logger('dev'));
@@ -73,8 +74,6 @@ app.use('/api/v1/lala',dummy);
 
 
 app.use('/api/v1/login',login);
-
-
 
 
 

@@ -491,9 +491,37 @@ let basicTestdetails = (req,res,next)=>{
     }
  }
 
+ let MaxMarks = (testid)=>{
+    return new Promise((resolve,reject)=>{
+        TestPaperModel.findOne({_id:testid},{questions:1})
+        .populate({
+            path : 'questions',
+            model : QuestionModel,
+            select : {'weightage' : 1}
+        })
+        .exec(function(err,MaxMarks){
+            if(err){
+                reject(err)
+            }else{
+                if(!MaxMarks){
+                    reject(new Error('Invalid testid'))
+                }else{
+                    let m = 0;
+                    MaxMarks.questions.map((d,i)=>{
+                        m+=d.weightage;
+                    })
+                    resolve(m)
+                }
+            }
+        })
+
+    })
+}
+ 
+    
  
 
  
  
 
-module.exports = {createEditTest,getSingletest,getAlltests,deleteTest,getCandidateDetails,basicTestdetails,TestDetails,getTestquestions,getCandidates,beginTest,endTest}
+module.exports = {createEditTest,getSingletest,getAlltests,deleteTest,MaxMarks,getCandidateDetails,basicTestdetails,TestDetails,getTestquestions,getCandidates,beginTest,endTest}
