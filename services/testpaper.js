@@ -353,7 +353,7 @@ let basicTestdetails = (req,res,next)=>{
                 message : "Unable to fetch details"
             })
         }else{
-            if(!getCandidateDetails){
+            if(getCandidateDetails.length!=null){
                 res.json({
                     success : false,
                     message: 'Invalid testid!'

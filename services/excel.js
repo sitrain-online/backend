@@ -14,8 +14,9 @@ let result = (testid)=>{
       if(!test){
         reject(test)
       }else{
-        ResultModel.find({testid : testid},{score : 1,userid : 1})
+        ResultModel.find({testid : testid},{score : 1,userid : 1,testid: 1})
         .populate('userid')
+        .populate('testid')
         .exec(function(err,results){
           if(err){
             console.log(err);
@@ -26,13 +27,15 @@ let result = (testid)=>{
             //excel sheet
             var worksheet = workbook.addWorksheet('Results',{pageSetup:{paperSize: 9, orientation:'landscape'}});
             worksheet.columns = [
-              { header: 'Name', key: 'Name', width: 60 },
-              { header: 'Email', key: 'Email', width: 100 },
-              { header: 'Contact', key: 'Contact', width: 10, outlineLevel: 1 },
+              { header: 'Name', key: 'Name', width: 30 },
+              { header: 'Email', key: 'Email', width: 70 },
+              { header: 'Contact', key: 'Contact', width: 50, outlineLevel: 1 },
               { header: 'Organisation', key: 'Organisation', width: 100 },
-              { header: 'Score', key: 'Score', width: 5 }
+              { header: 'Score', key: 'Score', width: 20 }
 
             ];
+            workbook.addRow({Type: testid.type});
+            workbook.addRow({Title : testid.title});
             results.map((d,i)=>{
             console.log(d.userid.name);
               worksheet.addRow({Name: d.userid.name, Email: d.userid.emailid, Contact : d.userid.contact,Organisation : d.userid.organisation,Score : d.score});
