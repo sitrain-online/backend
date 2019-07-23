@@ -139,8 +139,7 @@ let getSingletest = (req,res,next)=>{
 let getAlltests = (req,res,next)=>{
     if(req.user.type==='TRAINER'){
         var title = req.body.title;
-        var userid = req.body.userid;
-            TestPaperModel.find({userid : userid,status : 1},{status : 0})
+            TestPaperModel.find({createdBy : req.user._id,status : 1},{status : 0})
             .populate('questions' , 'body')
             .populate({
                 path: 'subjects',
@@ -207,6 +206,41 @@ let deleteTest = (req,res,next)=>{
             message : "Permissions not granted!"
         })
     } 
+}
+let TestDetails = (req,res,next)=>{
+    if(req.user.type === 'TRAINER'){
+        let testid = req.body.id;
+        TestPaperModel.findOne({_id:testid,createdBy : req.user._id},{isResultgenerated:0,isRegistrationavailable:0,createdBy:0,status:0,testbegins:0,questions : 0})
+        .populate('subjects', 'topic')
+        .exec(function(err,TestDetails){
+                if(err){
+                    console.log(err)
+                    res.status(500).json({
+                        success : false,
+                        message : "Unable to fetch details"
+                    })
+                }else{
+                    if(!TestDetails){
+                        res.json({
+                            success : false,
+                            message : 'Invalid test id.'
+                        })
+                    }else{
+                        res.json({
+                            success : true,
+                            message : 'Success',
+                            data : TestDetails
+                        })
+
+                    }
+                }
+        })
+    }else{
+        res.status(401).json({
+            success : false,
+            message : "Permissions not granted!"
+        })
+    }
 }
 
 let basicTestdetails = (req,res,next)=>{
@@ -424,4 +458,4 @@ let basicTestdetails = (req,res,next)=>{
  
  
 
-module.exports = {createEditTest,getSingletest,getAlltests,deleteTest,basicTestdetails,getTestquestions,getCandidates,beginTest,endTest}
+module.exports = {createEditTest,getSingletest,getAlltests,deleteTest,basicTestdetails,TestDetails,getTestquestions,getCandidates,beginTest,endTest}
