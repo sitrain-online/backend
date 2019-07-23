@@ -230,8 +230,7 @@ let getSingleQuestion = (req,res,next)=>{
         })
     }    
 }
-
-
+ 
 //create test papers
 
 module.exports = { createQuestion, getAllQuestions, getSingleQuestion, deleteQuestion}

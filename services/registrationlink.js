@@ -1,4 +1,5 @@
 let TestPaperModel = require("../models/testpaper");
+const appRoot = require("app-root-path")
 
 let stopRegistration = (req,res,next)=>{
     if(req.user.type==='TRAINER'){
@@ -56,4 +57,37 @@ let stopRegistration = (req,res,next)=>{
         })
     }
 }
-module.exports = {stopRegistration}
+/*
+let Download = (req,res,next)=>{
+    var testid = req.body.id;
+    if(req.user.type === 'TRAINER'){
+        const file = `${appRoot}/public/result/result-${testid}.xlsx`;
+        res.download(file);
+    }else{
+       res.status(401).json({
+           success : false,
+           message : "Permissions not granted!"
+       })
+    }
+
+}
+*/
+let Download = (req,res,next)=>{
+    var testid = req.body.id;
+    if(req.user.type === 'TRAINER'){
+        const file = `${req.protocol + '://' + req.get('host')}/public/result/result-${testid}.xlsx`;
+        res.json({
+            success : true,
+            message : 'File sent successfully',
+            file :file
+        })
+    }else{
+       res.status(401).json({
+           success : false,
+           message : "Permissions not granted!"
+       })
+    }
+
+}
+
+module.exports = {stopRegistration,Download}

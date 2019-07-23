@@ -9,4 +9,5 @@ router.get('/details/:_id',universal.getSingleSubject);
 
 
 
+
 module.exports=router;
