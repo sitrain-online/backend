@@ -128,8 +128,6 @@ let gresult = (uid,tid)=>{
                                         })
                                     }
                                 })
-                                console.log(Score)
-                                resolve(subResults)
                             }
                         }
                     })
