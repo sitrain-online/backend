@@ -139,8 +139,8 @@ let getSingletest = (req,res,next)=>{
 let getAlltests = (req,res,next)=>{
     if(req.user.type==='TRAINER'){
         var title = req.body.title;
-            TestPaperModel.find({status : 1},{status : 0})
-            .populate('createdBy', 'name')
+        var userid = req.body.userid;
+            TestPaperModel.find({userid : userid,status : 1},{status : 0})
             .populate('questions' , 'body')
             .populate({
                 path: 'subjects',
