@@ -127,12 +127,16 @@ let correctAnswers = (req,res,next)=>{
 }
 
 let feedback = (req,res,next)=>{
+        var userid = req.body.userid;
+        var testid = req.body.testid;
         var feedback =  req.body.feedback;
         var rating =  req.body.rating;
        
         var tempdata = FeedbackModel({
             feedback : feedback,
-            rating : rating
+            rating : rating,
+            userid : userid,
+            testid : testid
         })
         tempdata.save().then(()=>{
             res.json({
@@ -147,6 +151,32 @@ let feedback = (req,res,next)=>{
             })
         })
     }
+
+let checkFeedback = (req,res,next)=>{
+    var userid = req.body.userid;
+    var testid = req.body.testid;
+    FeedbackModel.findOne({userid:userid,testid:testid}).then((info)=>{
+        if(!info){
+            res.json({
+                success : true,
+                message : 'Feedback is not given by this userid.',
+                status : false
+            })
+        }else{
+            res.json({
+                success : true,
+                message : 'Feedback given',
+                status : true
+            })
+        }
+    }).catch((err)=>{
+        console.log(err);
+        res.status(500).json({
+            success : false,
+            message : "Error occured!"
+        })
+     })
+}
     
 let resendmail = (req,res,next)=>{
     var userid = req.body.id;
@@ -549,4 +579,4 @@ let getQuestion = (req,res,next)=>{
     }
 
 
-module.exports = {traineeenter,feedback,resendmail,correctAnswers,Answersheet,flags,chosenOptions,TraineeDetails,Testquestions,UpdateAnswers,EndTest,getQuestion}
+module.exports = {traineeenter,feedback,checkFeedback,resendmail,correctAnswers,Answersheet,flags,chosenOptions,TraineeDetails,Testquestions,UpdateAnswers,EndTest,getQuestion}

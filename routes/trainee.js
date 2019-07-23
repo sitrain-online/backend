@@ -14,6 +14,7 @@ router.post('/chosen/options',trainee.chosenOptions);
 router.post('/update/answer',trainee.UpdateAnswers);
 router.post('/end/test',trainee.EndTest);
 router.post('/get/question',trainee.getQuestion);
+router.post('/feedback/status',trainee.checkFeedback);
 
 
 
