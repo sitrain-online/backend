@@ -5,6 +5,7 @@ let tool = require("./tool");
 let options = require("../models/option");
 let SubjectModel = require("../models/subject");
 let result  =require("../services/excel").result;
+let ResultModel = require("../models/results");
 
 
 let createEditTest = (req,res,next)=>{
@@ -339,6 +340,43 @@ let basicTestdetails = (req,res,next)=>{
      
  }
 
+ let getCandidateDetails = (req,res,next)=>{
+    if(req.user.type==="TRAINER"){
+        var testid = req.body.testid;
+       ResultModel.find({testid : testid},{score : 1, userid : 1})
+       .populate('userid')
+       .exec(function(err,getCandidateDetails){
+        if(err){
+            console.log(err)
+            res.status(500).json({
+                success : false,
+                message : "Unable to fetch details"
+            })
+        }else{
+            if(!getCandidateDetails){
+                res.json({
+                    success : false,
+                    message: 'Invalid testid!'
+                })
+            }else{
+                res.json({
+                    success : true,
+                    message:'Candidate details',
+                    data : getCandidateDetails
+                })
+            }
+          }
+       })
+    }
+    else{
+        res.status(401).json({
+            success : false,
+            message : "Permissions not granted!"
+        })
+    }
+ }
+
+
  let getCandidates = (req,res,next)=>{
     if(req.user.type==="TRAINER"){
         var testid = req.body.id;
@@ -458,4 +496,4 @@ let basicTestdetails = (req,res,next)=>{
  
  
 
-module.exports = {createEditTest,getSingletest,getAlltests,deleteTest,basicTestdetails,TestDetails,getTestquestions,getCandidates,beginTest,endTest}
+module.exports = {createEditTest,getSingletest,getAlltests,deleteTest,getCandidateDetails,basicTestdetails,TestDetails,getTestquestions,getCandidates,beginTest,endTest}

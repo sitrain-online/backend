@@ -13,5 +13,6 @@ router.post('/candidates',testpaper.getCandidates);
 router.post('/begin',testpaper.beginTest);
 router.post('/end',testpaper.endTest);
 router.post('/trainer/details',testpaper.TestDetails);
+router.post('/candidates/details',testpaper.getCandidateDetails);
 
 module.exports = router;
