@@ -64,7 +64,7 @@ app.use('/api/v1/test',passport.authenticate('user-token', { session : false }),
 app.use('/api/v1/upload',passport.authenticate('user-token', { session : false }),up);
 app.use('/api/v1/trainer',passport.authenticate('user-token', { session : false }),stopRegistration);
 app.use('/api/v1/trainee',trainee);
-app.use('/api/v1/final',results);
+app.use('/api/v1/final',(req,res,next)=>{console.log("api called");next()},results);
 app.use('/api/v1/lala',dummy);
 
 

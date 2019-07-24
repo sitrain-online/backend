@@ -14,6 +14,7 @@ router.post('/begin',testpaper.beginTest);
 router.post('/end',testpaper.endTest);
 router.post('/trainer/details',testpaper.TestDetails);
 router.post('/candidates/details',testpaper.getCandidateDetails);
+router.post('/max/marks',testpaper.MM);
 
 
 module.exports = router;

@@ -449,7 +449,7 @@ let basicTestdetails = (req,res,next)=>{
         .then((info)=>{
             if(info){
                 console.log(info);
-                result(id).then((sheet)=>{
+                result(id,MaxMarks).then((sheet)=>{
                     res.json({
                         success : true,
                         message : 'The test has ended.',
@@ -499,23 +499,49 @@ let basicTestdetails = (req,res,next)=>{
             model : QuestionModel,
             select : {'weightage' : 1}
         })
-        .exec(function(err,MaxMarks){
+        .exec(function(err,Ma){
             if(err){
+                console.log(err)
                 reject(err)
             }else{
-                if(!MaxMarks){
+                if(!Ma){
                     reject(new Error('Invalid testid'))
                 }else{
                     let m = 0;
-                    MaxMarks.questions.map((d,i)=>{
+                    Ma.questions.map((d,i)=>{
                         m+=d.weightage;
                     })
+                    console.log(m)
                     resolve(m)
                 }
             }
         })
 
     })
+}
+
+let MM = (req,res,next)=>{
+    var testid = req.body.testid;
+    if(req.user.type === 'TRAINER'){
+        MaxMarks(testid).then((MaxM)=>{
+            res.json({
+                success : true,
+                message : 'Maximum Marks',
+                data : MaxM
+            })
+        }).catch((error)=>{
+            res.status(500).json({
+                success:false,
+                message:"Unable to get Max Marks",
+            })
+        })
+    }else{
+        res.status(401).json({
+            success : false,
+            message : "Permissions not granted!"
+        })
+    }
+   
 }
  
     
@@ -524,4 +550,4 @@ let basicTestdetails = (req,res,next)=>{
  
  
 
-module.exports = {createEditTest,getSingletest,getAlltests,deleteTest,MaxMarks,getCandidateDetails,basicTestdetails,TestDetails,getTestquestions,getCandidates,beginTest,endTest}
+module.exports = {createEditTest,getSingletest,getAlltests,deleteTest,MaxMarks,MM,getCandidateDetails,basicTestdetails,TestDetails,getTestquestions,getCandidates,beginTest,endTest}

@@ -10,13 +10,16 @@ var ResultModel = require("../models/results");
 let generateResults = (req,res,next)=>{
     var userid = req.body.userid;
     var testid = req.body.testid;
+    
     gresult(userid,testid).then((result)=>{
+        console.log(result)
         res.json({
             success:true,
             message:"Result generated successfully",
             result:result
         })
     }).catch((error)=>{
+        console.log(error)
         res.status(500).json({
             success:false,
             message:"Unable to generate result",
