@@ -40,7 +40,7 @@ var dummy = require("./routes/dummy");
 
 
 //configs
-app.use('/public',express.static('public'))
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -75,7 +75,9 @@ app.use('/api/v1/lala',dummy);
 
 app.use('/api/v1/login',login);
 
-
+app.get('*', (req,res) =>{
+    res.sendFile(path.join(__dirname+'/public/index.html'));
+});
 
 
 
