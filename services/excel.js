@@ -32,13 +32,16 @@ let result = (testid,MaxMarks)=>{
             //excel sheet
             MaxMarks(testid).then((Mmarks)=>{
               var worksheet = workbook.addWorksheet('Results',{pageSetup:{paperSize: 9, orientation:'landscape'}});
-            
+              
+              
               console.log(test.type);
               worksheet.columns = [
+                { header: 'Type', key: 'Type', width: 20 },
+                { header: 'Test-Title', key: 'Title', width: 20 },
                 { header: 'Name', key: 'Name', width: 30 },
                 { header: 'Email', key: 'Email', width: 70 },
-                { header: 'Contact', key: 'Contact', width: 50, outlineLevel: 1 },
-                { header: 'Organisation', key: 'Organisation', width: 100 },
+                { header: 'Contact', key: 'Contact', width: 35, outlineLevel: 1 },
+                { header: 'Organisation', key: 'Organisation', width: 70 },
                 { header: 'Score', key: 'Score', width: 20 },
                 { header: 'Max Marks', key: 'Outof', width : 20}
 
@@ -48,7 +51,7 @@ let result = (testid,MaxMarks)=>{
               
               results.map((d,i)=>{
                 console.log(d.userid.name);
-                worksheet.addRow({Name: d.userid.name, Email: d.userid.emailid, Contact : d.userid.contact,Organisation : d.userid.organisation,Score : d.score,Outof:M});
+                worksheet.addRow({Name: d.userid.name, Email: d.userid.emailid, Contact : d.userid.contact,Organisation : d.userid.organisation,Type : d.testid.type,Title : d.testid.title,Score : d.score,Outof:M});
               })
               workbook.xlsx.writeFile(`result-${testid}.xlsx`)
               .then(function(r) {
