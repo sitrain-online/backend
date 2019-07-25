@@ -1,5 +1,6 @@
 let TestPaperModel = require("../models/testpaper");
-const appRoot = require("app-root-path")
+const appRoot = require("app-root-path");
+let FeedbackModel=require("../models/feedback");
 
 let stopRegistration = (req,res,next)=>{
     if(req.user.type==='TRAINER'){
@@ -90,4 +91,36 @@ let Download = (req,res,next)=>{
 
 }
 
-module.exports = {stopRegistration,Download}
+
+
+
+let getFeedBack =(req,res,next)=>{
+    var testid = req.body.testid;
+    if(req.user.type === 'TRAINER'){
+        FeedbackModel.find({testid:testid})
+        .populate('userid')
+        .exec((err,data)=>{
+            if(err){
+                console.log(err);
+                res.status(500).json({
+                    success:false,
+                    message:"Server Error"
+                })
+            }
+            else{
+                res.json({
+                    success:true,
+                    message:"Feedbacks Sent Successfully",
+                    data:data
+                })
+            } 
+        })
+    }else{
+       res.status(401).json({
+           success : false,
+           message : "Permissions not granted!"
+       })
+    }
+}
+
+module.exports = {stopRegistration,Download,getFeedBack}

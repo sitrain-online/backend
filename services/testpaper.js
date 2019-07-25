@@ -541,13 +541,42 @@ let MM = (req,res,next)=>{
             message : "Permissions not granted!"
         })
     }
-   
 }
  
-    
+let checkTestName =(req,res,next)=>{
+    var testName = req.body.testname;
+    if(req.user.type === 'TRAINER'){
+        TestPaperModel.findOne({title:testName},{_id:1}).then((data)=>{
+            if(data){
+                res.json({
+                    success:true,
+                    can_use:false
+                })
+            }
+            else{
+                res.json({
+                    success:true,
+                    can_use:true
+                })
+            }
+        }).catch((error)=>{
+            console.log(error);
+            res.status(500).json({
+                success:false,
+                message:"Server error"
+            })
+        })
+    }
+    else{
+        res.status(401).json({
+            success : false,
+            message : "Permissions not granted!"
+        })
+    }
+}
  
 
  
  
 
-module.exports = {createEditTest,getSingletest,getAlltests,deleteTest,MaxMarks,MM,getCandidateDetails,basicTestdetails,TestDetails,getTestquestions,getCandidates,beginTest,endTest}
+module.exports = {checkTestName,createEditTest,getSingletest,getAlltests,deleteTest,MaxMarks,MM,getCandidateDetails,basicTestdetails,TestDetails,getTestquestions,getCandidates,beginTest,endTest}
