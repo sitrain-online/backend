@@ -17,7 +17,7 @@ router.post('/', upload.single('file'),(req,res,next)=>{
     res.json({
         success:true,
         message:'File uploaded successfully',
-        link:req.file.path
+        link:`uploads/${req.file.filename}`
     })
 });
 
