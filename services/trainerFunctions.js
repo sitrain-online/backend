@@ -31,7 +31,7 @@ let createQuestion = (req,res,next)=>{
             })
             console.log(anscount);
             var explanation = req.body.explanation;
-                QuestionModel.findOne({ body : body },{status:0})
+                QuestionModel.findOne({ body : body,status:1 },{status:0})
                 .then((info)=>{
                     if(!info){
                         options.insertMany(option,(err,op)=>{
