@@ -76,7 +76,7 @@ let Download = (req,res,next)=>{
 let Download = (req,res,next)=>{
     var testid = req.body.id;
     if(req.user.type === 'TRAINER'){
-        const file = `${req.protocol + '://' + req.get('host')}/public/result/result-${testid}.xlsx`;
+        const file = `${req.protocol + '://' + req.get('host')}/result/result-${testid}.xlsx`;
         res.json({
             success : true,
             message : 'File sent successfully',
